@@ -13,7 +13,15 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<App {...props} />);
+        root.render(
+            <div
+                id="PageArea"
+                className="bg-gray-100 dark:bg-gray-900"
+            >
+                <App {...props} />
+            </div>
+
+        );
     },
     progress: {
         color: '#4B5563',
