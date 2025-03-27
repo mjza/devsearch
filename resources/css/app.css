@@ -111,6 +111,15 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.87 0 0);
+
+    /* Brand Colors */
+    --brand-primary: #1B223C;
+    --brand-primary-light: #2F3A5A;
+    --brand-secondary: #4A5675;
+    --brand-accent: #7282A3;
+    --brand-highlight: #B3BED2;
+    --brand-background: #F5F7FA;
+    --brand-text-contrast: #FFFFFF;
 }
 
 .dark {

@@ -7,8 +7,27 @@ export default function SiteHeader() {
         <>
             <header className="w-full bg-white shadow px-15 py-3 flex items-center justify-between dark:bg-secondary">
                 <div className="flex items-center space-x-6">
+                    <div className="relative h-6 w-6">
+                        {/* Light mode logo */}
+                        <img
+                            src="/logo.svg"
+                            alt="Logo"
+                            className="h-6 w-6 block dark:hidden"
+                        />
+                        {/* Dark mode logo */}
+                        <img
+                            src="/logo_dark.svg"
+                            alt="Logo (Dark)"
+                            className="h-6 w-6 hidden dark:block"
+                        />
+                        </div>
+
                     <nav className="flex items-center space-x-10 text-gray-700">
-                        <a href="/"><h1 className="text-2xl font-extrabold text-blue-600">DevSearch</h1></a>
+                        <a href="/">
+                            <h1 className="text-2xl font-extrabold text-[color:var(--brand-primary-light)] dark:text-[color:var(--brand-accent)]">
+                                DevSearch
+                            </h1>
+                        </a>
                         <a href="#" className="text-base font-medium hover:text-blue-500 dark:text-[#EDEDEC] dark:hover:text-blue-500">Components</a>
                         <a href="#" className="text-base font-medium hover:text-blue-500 dark:text-[#EDEDEC] dark:hover:text-blue-500">Packages</a>
                         <a href="#" className="text-base font-medium hover:text-blue-500 dark:text-[#EDEDEC] dark:hover:text-blue-500">Libraries</a>
