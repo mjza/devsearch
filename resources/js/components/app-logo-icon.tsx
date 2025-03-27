@@ -1,13 +1,62 @@
 import { SVGAttributes } from 'react';
 
-export default function AppLogoIcon(props: SVGAttributes<SVGElement>) {
+interface AppLogoIconProps extends SVGAttributes<SVGElement> {
+    fill?: string;
+    size?: number | string;
+    background?: string;
+}
+
+export default function AppLogoIcon({
+    fill = '#7282A3',
+    background,
+    ...props
+}: AppLogoIconProps) {
     return (
-        <svg {...props} viewBox="0 0 40 42" xmlns="http://www.w3.org/2000/svg">
-            <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M17.2 5.63325L8.6 0.855469L0 5.63325V32.1434L16.2 41.1434L32.4 32.1434V23.699L40 19.4767V9.85547L31.4 5.07769L22.8 9.85547V18.2999L17.2 21.411V5.63325ZM38 18.2999L32.4 21.411V15.2545L38 12.1434V18.2999ZM36.9409 10.4439L31.4 13.5221L25.8591 10.4439L31.4 7.36561L36.9409 10.4439ZM24.8 18.2999V12.1434L30.4 15.2545V21.411L24.8 18.2999ZM23.8 20.0323L29.3409 23.1105L16.2 30.411L10.6591 27.3328L23.8 20.0323ZM7.6 27.9212L15.2 32.1434V38.2999L2 30.9666V7.92116L7.6 11.0323V27.9212ZM8.6 9.29991L3.05913 6.22165L8.6 3.14339L14.1409 6.22165L8.6 9.29991ZM30.4 24.8101L17.2 32.1434V38.2999L30.4 30.9666V24.8101ZM9.6 11.0323L15.2 7.92117V22.5221L9.6 25.6333V11.0323Z"
-            />
+        <svg
+            width="442.01562"
+            height="464.02606"
+            viewBox="0 0 442.01562 464.02606"
+            xmlns="http://www.w3.org/2000/svg"
+            {...props}
+        >
+            {background && (
+                <rect
+                    width="100%"
+                    height="100%"
+                    fill={background}
+                />
+            )}
+            <g transform="matrix(1.5563709,0,0,1.5563709,-147.85524,-147.85524)">
+                <g>
+                    <path
+                        fill={fill}
+                        d="m 193.72951,187.97429 c -0.90502,3.1629 -1.73965,6.10223 -2.13352,8.73304 -0.86929,2.24891 -1.61169,4.81709 -2.38265,7.51079 -2.80474,9.76262 -12.36083,72.53055 -10.56173,73.04723 1.80134,0.52402 27.45704,-58.09985 30.25655,-67.86953 0.90531,-3.15989 1.73994,-6.09922 2.13352,-8.73304 0.86928,-2.2489 1.61169,-4.81708 2.38564,-7.51108 2.80175,-9.76233 12.35948,-72.52891 10.56203,-73.04423 -1.80133,-0.52403 -27.45704,58.09985 -30.25984,67.86682 z m 10.90631,13.92678 c -1.54064,1.8772 -4.31003,2.15294 -6.18888,0.61094 -1.87886,-1.54199 -2.15024,-4.31332 -0.6096,-6.19053 1.54199,-1.87885 4.31168,-2.15159 6.19053,-0.60959 1.87886,1.54199 2.14994,4.31032 0.60795,6.18918 z"
+                        style={{ strokeWidth: 2.13211 }}
+                    />
+                    <circle
+                        cx="200"
+                        cy="200"
+                        r="100"
+                        stroke={fill}
+                        strokeWidth="10"
+                        fill="none"
+                    />
+                    <text x="200" y="125" textAnchor="middle" fill={fill} fontSize="20px">N</text>
+                    <text x="200" y="290" textAnchor="middle" fill={fill} fontSize="20px">S</text>
+                    <text x="275" y="205" textAnchor="middle" fill={fill} fontSize="20px">E</text>
+                    <text x="125" y="205" textAnchor="middle" fill={fill} fontSize="20px">W</text>
+                    <rect
+                        x="270"
+                        y="270"
+                        width="160"
+                        height="20"
+                        rx="10"
+                        ry="10"
+                        transform="rotate(45,270,270)"
+                        fill={fill}
+                    />
+                </g>
+            </g>
         </svg>
     );
 }
