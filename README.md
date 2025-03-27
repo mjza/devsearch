@@ -6,7 +6,7 @@ You need to install **XAMPP** on your machine in `c:\xammp` and your project mus
 
 ---
 
-## ✅ 1. Install Composer (if not yet installed)
+### ✅ 1. Install Composer (if not yet installed)
 
 1. Download the Windows installer:  
    👉 [https://getcomposer.org/Composer-Setup.exe](https://getcomposer.org/Composer-Setup.exe)
@@ -28,7 +28,7 @@ You need to install **XAMPP** on your machine in `c:\xammp` and your project mus
 
 ---
 
-## ✅ 2. Navigate to Your Project Folder
+### ✅ 2. Navigate to Your Project Folder
 
 Open **Command Prompt** (CMD), **PowerShell**, or **Git Bash** and run:
 
@@ -38,7 +38,7 @@ cd C:\Users\username\Git\GitHub\devsearch
 
 ---
 
-## ✅ 3. Install Laravel Dependencies
+### ✅ 3. Install Laravel Dependencies
 
 ```bash
 composer install
@@ -46,7 +46,7 @@ composer install
 
 ---
 
-## ✅ 4. Set Up Environment File
+### ✅ 4. Set Up Environment File
 
 If you don’t already have a `.env` file in the root of your project:
 
@@ -56,7 +56,7 @@ copy .env.example .env
 
 ---
 
-## ✅ 5. Generate Laravel App Key
+### ✅ 5. Generate Laravel App Key
 
 ```bash
 php artisan key:generate
@@ -71,7 +71,7 @@ You can also call it directly:
 
 ---
 
-## ✅ 6. Configure Database in `.env`
+### ✅ 6. Configure Database in `.env`
 
 If using MySQL from XAMPP, set this in your `.env` file:
 
@@ -88,7 +88,7 @@ DB_PASSWORD=
 
 ---
 
-## ✅ 7. Run Migrations
+### ✅ 7. Run Migrations
 
 ```bash
 php artisan migrate
@@ -102,7 +102,7 @@ Or:
 
 ---
 
-## ✅ 8. Install Node.js and npm (for React)
+### ✅ 8. Install Node.js and npm (for React)
 
 1. Download Node.js from:  
    👉 [https://nodejs.org](https://nodejs.org)  
@@ -117,7 +117,7 @@ npm -v
 
 ---
 
-## ✅ 9. Install Frontend Dependencies
+### ✅ 9. Install Frontend Dependencies
 
 In your project root:
 
@@ -127,7 +127,7 @@ npm install
 
 ---
 
-## ✅ 10. Build the Frontend (React)
+### ✅ 10. Build the Frontend (React)
 
 ```bash
 npm run dev
@@ -137,7 +137,7 @@ npm run dev
 
 ---
 
-## ✅ 11. Start Laravel Server
+### ✅ 11. Start Laravel Server
 
 ```bash
 php artisan serve
@@ -151,7 +151,7 @@ php artisan serve
 
 ---
 
-## 🎉 Done!
+##### 🎉 Done!
 
 Go to your browser and visit:  
 👉 [http://127.0.0.1:8000](http://127.0.0.1:8000)
@@ -164,7 +164,7 @@ Would you like me to help check if React is integrated via Laravel Mix or a sepa
 
 ## How to run the dev server
 
-### 🔁 Step 1: Start Vite's Dev Server
+#### 🔁 Step 1: Start Vite's Dev Server
 
 In the root of your Laravel app, run:
 
@@ -179,7 +179,7 @@ This launches the **Vite dev server**, which:
 
 ---
 
-### 🧠 Tip: Use `php artisan serve` in another terminal
+#### 🧠 Tip: Use `php artisan serve` in another terminal
 
 So your **workflow during development** looks like this:
 
@@ -201,7 +201,7 @@ Deploying a **Laravel + React (Vite)** app to **IONOS with SSH/SFTP** access is 
 
 ---
 
-## 🚨 IONOS Hosting Considerations
+### 🚨 IONOS Hosting Considerations
 
 Most **IONOS web hosting plans** (especially shared hosting):
 - ❌ Don't allow running `artisan serve`, `npm`, `composer`, or Vite directly on the server.
@@ -210,7 +210,7 @@ Most **IONOS web hosting plans** (especially shared hosting):
 
 ---
 
-## 🛠️ Deployment Strategy Overview
+### 🛠️ Deployment Strategy Overview
 
 We’ll:
 
@@ -222,9 +222,9 @@ We’ll:
 
 ---
 
-## ✅ Step-by-Step Deployment to IONOS via SFTP/SSH
+### ✅ Step-by-Step Deployment to IONOS via SFTP/SSH
 
-### 1. 🔧 Build Frontend (React via Vite) Locally
+#### 1. 🔧 Build Frontend (React via Vite) Locally
 
 In your project root:
 
@@ -236,7 +236,7 @@ npm run build
 
 ---
 
-### 2. 💻 Prepare Laravel for Production
+#### 2. 💻 Prepare Laravel for Production
 
 **Still on your local machine:**
 
@@ -249,7 +249,7 @@ php artisan view:cache
 
 ---
 
-### 3. 🌐 Upload Files to IONOS
+#### 3. 🌐 Upload Files to IONOS
 
 Use **FileZilla** or another SFTP tool:
 
@@ -267,7 +267,7 @@ Use **FileZilla** or another SFTP tool:
         public/      ← Only contents of /devsearch/public go here
 ```
 
-## ✅ STEP-BY-STEP: Initialize Laravel on IONOS Shared Hosting 
+### ✅ STEP-BY-STEP: Initialize Laravel on IONOS Shared Hosting 
 
 Since IONOS gives you **CLI access with a specific PHP binary** (like `/usr/bin/php8.2-cli`), you can now **initialize Laravel properly and fully on the server.**
 
@@ -275,7 +275,7 @@ Here’s your **full Laravel initialization guide for IONOS shared hosting**, st
 
 ---
 
-### ✅ 1. **SSH Into Your Server**
+#### ✅ 1. **SSH Into Your Server**
 
 Use your terminal or any SSH client (like PuTTY or MobaXterm):
 
@@ -291,7 +291,7 @@ cd ~/devsearch
 
 ---
 
-### ✅ 2. **Set Correct File Permissions**
+#### ✅ 2. **Set Correct File Permissions**
 
 Laravel needs write access to some folders:
 
@@ -304,7 +304,7 @@ chmod -R 775 bootstrap/cache
 
 ---
 
-### ✅ 3. **Generate the APP_KEY**
+#### ✅ 3. **Generate the APP_KEY**
 
 Run:
 
@@ -316,7 +316,7 @@ Run:
 
 ---
 
-### ✅ 4. **Update Your `.env` File for Production**
+#### ✅ 4. **Update Your `.env` File for Production**
 
 Make sure `.env` contains:
 
@@ -394,7 +394,7 @@ Use `file` drivers to avoid needing cache/session database tables.
 
 ---
 
-### ✅ 5. **Clear Any Old Cache**
+#### ✅ 5. **Clear Any Old Cache**
 
 ```bash
 /usr/bin/php8.2-cli artisan config:clear
@@ -405,7 +405,7 @@ Use `file` drivers to avoid needing cache/session database tables.
 
 ---
 
-### ✅ 6. **Rebuild Cache for Production**
+#### ✅ 6. **Rebuild Cache for Production**
 
 ```bash
 /usr/bin/php8.2-cli artisan config:cache
@@ -417,7 +417,7 @@ Use `file` drivers to avoid needing cache/session database tables.
 
 ---
 
-### ✅ 7. **Run Migrations (if you use MySQL)**
+#### ✅ 7. **Run Migrations (if you use MySQL)**
 
 ```bash
 /usr/bin/php8.2-cli artisan migrate --force
@@ -427,7 +427,7 @@ Use `file` drivers to avoid needing cache/session database tables.
 
 ---
 
-### ✅ 8. **Build Frontend (if using Vite/React)**
+#### ✅ 8. **Build Frontend (if using Vite/React)**
 
 Vite won’t run on shared hosting, so do this locally:
 
@@ -439,7 +439,7 @@ Then upload the resulting `public/build/` (or whatever your Vite config outputs)
 
 ---
 
-### ✅ 9. **Ensure `.htaccess` Is Present in `public/`**
+#### ✅ 9. **Ensure `.htaccess` Is Present in `public/`**
 
 The file `public/.htaccess` must contain the following based on this [link](https://laracasts.com/discuss/channels/laravel/unable-to-deploy-laravel-app-to-ionos-shared-hosting):
 
@@ -475,7 +475,7 @@ The file `public/.htaccess` must contain the following based on this [link](http
 
 ---
 
-### ✅ 10. **Visit Your Website**
+#### ✅ 10. **Visit Your Website**
 
 Go to:
 
@@ -487,7 +487,7 @@ https://devsearch.ca
 
 ---
 
-## ✅ OPTIONAL: Test Logging
+### ✅ OPTIONAL: Test Logging
 
 You can test logging with:
 
@@ -500,7 +500,7 @@ Then check `cat storage/logs/laravel.log`.
 
 ---
 
-## 🧩 Final Notes
+### 🧩 Final Notes
 
 | Task | Command |
 |------|---------|
