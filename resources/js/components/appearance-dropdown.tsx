@@ -10,11 +10,11 @@ export default function AppearanceToggleDropdown({ className = '', ...props }: H
     const getCurrentIcon = () => {
         switch (appearance) {
             case 'dark':
-                return <Moon className="h-5 w-5" />;
+                return <Moon className="h-5 w-5 text-[color:var(--foreground)]" />;
             case 'light':
-                return <Sun className="h-5 w-5" />;
+                return <Sun className="h-5 w-5 text-[color:var(--foreground)]" />;
             default:
-                return <Monitor className="h-5 w-5" />;
+                return <Monitor className="h-5 w-5 text-[color:var(--foreground)]" />;
         }
     };
 

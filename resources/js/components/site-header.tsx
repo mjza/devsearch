@@ -1,5 +1,6 @@
 import { type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
+import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 import AppLogo from './app-logo';
 
 export default function SiteHeader() {
@@ -19,6 +20,9 @@ export default function SiteHeader() {
                     </nav>
                 </div>
                 <div className="flex items-center space-x-3">
+                    <div>
+                        <AppearanceToggleDropdown/>
+                    </div>
                     {auth.user ? (
                         <Link
                             href={route('dashboard')}
@@ -45,6 +49,7 @@ export default function SiteHeader() {
                         </>
                     )}
                 </div>
+                
             </header>
         </>
     );
