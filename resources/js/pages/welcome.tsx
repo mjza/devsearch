@@ -2,6 +2,7 @@ import SiteHeader from '@/components/site-header';
 import SearchBox from '@/components/site-search-box';
 import SiteNewsSection from '@/components/site-news-section';
 import SitePopularComparisonsSection from '@/components/site-popular-comparisons-section';
+import SiteFooter from '@/components/site-footer';
 import { Head } from '@inertiajs/react';
 
 
@@ -29,12 +30,14 @@ export default function Welcome() {
                 {/* Search box */}
                 <SearchBox/>
 
-                {/* NEWS */} 
+                {/* News Section */} 
                 <SiteNewsSection />
 
+                {/* Hot comparisons */}
                 <SitePopularComparisonsSection />
-                
-                <div className="hidden h-14.5 lg:block"></div>
+
+                {/* Footer */}
+                <SiteFooter />
             </div>
         </>
     );
