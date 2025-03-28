@@ -86,11 +86,13 @@ export default function SitePopularComparisonsSection() {
             </div>
             <div className="mt-4 flex justify-start gap-4 text-sm text-gray-600 dark:text-gray-400">
               <div>
-                <span className="font-semibold">Downloads: </span>{item.left.downloads} vs {item.right.downloads}
+                <span className="font-semibold">Downloads: </span>
+                <div className='inline-flex gap-1'><span>{item.left.downloads}</span><span>vs</span><span>{item.right.downloads}</span></div>
               </div>
               <div></div>
               <div>
-                <span className="font-semibold">Stars: </span>{item.left.stars} vs {item.right.stars}
+                <span className="font-semibold">Stars: </span>
+                <div className='inline-flex gap-1'><span>{item.left.stars}</span><span>vs</span><span>{item.right.stars}</span></div>
               </div>
             </div>
           </div>
