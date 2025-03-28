@@ -1,5 +1,6 @@
 import SiteHeader from '@/components/site-header';
 import SearchBox from '@/components/site-search-box';
+import SiteNewsSection from '@/components/site-news-section';
 import { Head } from '@inertiajs/react';
 
 
@@ -26,8 +27,9 @@ export default function Welcome() {
 
                 {/* Search box */}
                 <SearchBox/>
-                 
-                
+
+                {/* NEWS */} 
+                <SiteNewsSection />
                 
                 <div className="hidden h-14.5 lg:block"></div>
             </div>
