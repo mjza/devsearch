@@ -51,16 +51,16 @@ export default function SiteNewsSection() {
   }, []);
 
   return (
-    <section className="mx-auto my-12 px-4">
+    <section className="mx-auto my-12 w-full px-4">
       <h2 className="mb-6 text-2xl font-bold text-[color:var(--brand-primary-light)] dark:text-[color:var(--brand-accent)]">
       Latest Software News
       </h2>
 
-      <div className="flex flex-wrap gap-6 justify-start">
+      <div className="flex flex-row gap-4 justify-between">
         {news.map((item) => (
           <div
             key={item.id}
-            className="w-full max-w-[485px] h-[200px] rounded-[8px] bg-white p-4 shadow-sm dark:bg-[#1b1b1b] flex flex-col justify-between"
+            className="flex-1 rounded-lg bg-white dark:bg-[#1b1b1b] shadow-sm p-4 flex flex-col justify-between max-w-[485px] h-[200px] min-w-0"
           >
             <div>
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
@@ -77,7 +77,7 @@ export default function SiteNewsSection() {
               <span className="text-gray-400">{item.timestamp}</span>
               <a
                 href={item.link}
-                className="font-medium text-[color:var(--brand-primary-light)] hover:underline dark:text-[color:var(--brand-accent)]"
+                className="font-medium text-blue-500 hover:underline dark:text-[color:var(--brand-accent)]"
               >
                 Read more
               </a>
