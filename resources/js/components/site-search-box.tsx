@@ -21,7 +21,7 @@ export default function SearchBox() {
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-[1036px] sm:w-[90%] md:w-[80%] lg:w-[70%] h-[164px] rounded-[10px] bg-white shadow-[0_5px_5px_-5px_rgba(51,51,51,1)] p-6 flex flex-col justify-between">
+    <div className="relative mx-auto w-full max-w-[1036px] sm:w-[90%] md:w-[80%] lg:w-[70%] h-[164px] rounded-[10px] bg-white dark:bg-gray-900 shadow-[0_5px_5px_-5px_rgba(51,51,51,1)] p-6 flex flex-col justify-between">
       {/* Input field + button row */}
       <div className="flex w-full gap-4">
         <input
@@ -29,7 +29,7 @@ export default function SearchBox() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="SearchSearch packages, components, or libraries..."
-          className="flex-1 rounded-md border border-gray-300 px-4 py-3 text-[16px] font-sans text-black placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="flex-1 rounded-md border border-gray-300 px-4 py-3 text-[16px] font-sans text-black dark:text-white placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
         />
         <button
           onClick={handleSearch}
@@ -45,7 +45,7 @@ export default function SearchBox() {
           <button
             key={tag}
             onClick={() => handleTagClick(tag)}
-            className="rounded-full border border-gray-300 bg-gray-100 px-4 py-1 text-sm text-gray-700 transition hover:border-gray-500 hover:bg-gray-200"
+            className="rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 bg-[#E0E0E0] text-[15px] transition hover:border-gray-500 hover:bg-gray-200"
           >
             {tag}
           </button>
