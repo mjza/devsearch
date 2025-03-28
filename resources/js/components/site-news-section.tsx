@@ -66,7 +66,7 @@ export default function SiteNewsSection() {
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
                 {item.tag}
               </p>
-              <h3 className="text-lg font-semibold text-black dark:text-white">
+              <h3 className="text-lg font-semibold text-[color:var(--brand-primary)] dark:text-[color:var(--brand-primary-light)]">
                 {item.title}
               </h3>
               <p className="mt-1 text-sm text-gray-700 dark:text-gray-300 line-clamp-3">
