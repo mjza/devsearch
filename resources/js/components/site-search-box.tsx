@@ -46,7 +46,12 @@ export default function SearchBox({ title, query }: Props) {
         />
         <button
           onClick={handleSearch}
-          className="whitespace-nowrap rounded-md bg-[color:var(--brand-primary-light)] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[color:var(--brand-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-accent)]"
+          disabled={!input?.trim()}
+          className={`whitespace-nowrap rounded-md px-6 py-3 text-sm font-semibold text-white shadow-sm transition focus:outline-none focus:ring-2
+              ${!input?.trim()
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-[color:var(--brand-primary-light)] hover:bg-[color:var(--brand-accent)] focus:ring-[color:var(--brand-accent)]'
+            }`}
         >
           Search
         </button>
@@ -54,17 +59,17 @@ export default function SearchBox({ title, query }: Props) {
 
       {/* Tag buttons */}
       {!title && (
-      <div className="mt-4 flex flex-wrap gap-3">
-        {mockTags.map((tag) => (
-          <button
-            key={tag}
-            onClick={() => handleTagClick(tag)}
-            className="rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 bg-[#E0E0E0] text-[15px] transition hover:border-gray-500 hover:bg-gray-200"
-          >
-            {tag}
-          </button>
-        ))}
-      </div>
+        <div className="mt-4 flex flex-wrap gap-3">
+          {mockTags.map((tag) => (
+            <button
+              key={tag}
+              onClick={() => handleTagClick(tag)}
+              className="rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 bg-[#E0E0E0] text-[15px] transition hover:border-gray-500 hover:bg-gray-200"
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
       )}
     </div>
   );
