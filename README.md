@@ -431,6 +431,17 @@ or
 
 > `--force` is required in production to run without confirmation.
 
+For migrate and seeding:
+
+```bash
+/usr/bin/php8.2-cli artisan migrate:fresh --seed
+```
+
+For only seeding:
+```bash
+/usr/bin/php8.2-cli  artisan db:seed
+```
+
 ---
 
 #### ✅ 8. **Build Frontend (if using Vite/React)**
