@@ -397,6 +397,12 @@ Use `file` drivers to avoid needing cache/session database tables.
 #### ✅ 5. **Clear Any Old Cache**
 
 ```bash
+/usr/bin/php8.2-cli artisan optimize:clear
+```
+
+or
+
+```bash
 /usr/bin/php8.2-cli artisan config:clear
 /usr/bin/php8.2-cli artisan cache:clear
 /usr/bin/php8.2-cli artisan route:clear
