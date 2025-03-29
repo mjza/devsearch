@@ -2,10 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
+use App\Http\Controllers\SearchController;
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
+
+Route::get('/search', [SearchController::class, 'showDependencies'])
+    ->name('search');
 
 Route::get('/result', function () {
     return Inertia::render('result');
