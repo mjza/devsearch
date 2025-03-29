@@ -1,5 +1,6 @@
 import SiteHeader from '@/components/site-header';
 import SiteFooter from '@/components/site-footer';
+import SearchBox from '@/components/site-search-box';
 import { Head } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { usePage } from '@inertiajs/react';
@@ -38,6 +39,8 @@ export default function Results() {
             </Head>
             <div className="flex min-h-screen mx-35 flex-col items-center justify-between bg-[#F9FAFB] text-[#1b1b18] dark:bg-[#0a0a0a]">
                 <SiteHeader />
+
+                <SearchBox title="Find and Compare Components" query={query ?? undefined}/>
 
                 {loading ? (
                     <p>Loading...</p>
