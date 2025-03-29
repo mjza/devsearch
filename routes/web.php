@@ -7,7 +7,7 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::get('/search', [SearchController::class, 'showDependencies'])
+Route::get('/search', [SearchController::class, 'search'])
     ->name('search');
 
 Route::get('/result', function () {
