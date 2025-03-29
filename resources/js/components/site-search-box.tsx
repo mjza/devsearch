@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { router } from '@inertiajs/react';
 
 const mockTags = [
   'Front-end Frameworks',
@@ -16,8 +17,7 @@ export default function SearchBox() {
   };
 
   const handleSearch = () => {
-    // You can replace this with your actual search logic
-    console.log('Searching for:', input);
+    router.visit(route('result') + `?query=${encodeURIComponent(input)}`);
   };
 
   return (
