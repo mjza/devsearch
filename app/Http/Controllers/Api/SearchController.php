@@ -17,10 +17,9 @@ class SearchController extends Controller
      */
     public function search(Request $request)
     {
-        // Get the search query parameter
         $query = $request->input('q');
 
-        // If no query provided, return an empty array
+
         if (!$query) {
             return response()->json([]);
         }
@@ -32,7 +31,7 @@ class SearchController extends Controller
         // Use pagination to limit the number of projects loaded per request
         $projects = $projectsQuery->paginate(50);
 
-        // Define the desired quality attributes
+
         $desiredAttributes = [
             'performance',
             'usability',
@@ -42,26 +41,20 @@ class SearchController extends Controller
 
         $results = [];
 
-        // Iterate only over the current page's projects
         foreach ($projects->items() as $project) {
-            // Initialize quality data with default null values
+
             $qualityData = array_fill_keys($desiredAttributes, null);
 
-            // Retrieve all quality analyses for the current project
             $analyses = QualityAnalysis::where('project_id', $project->id)->get();
 
-            // Assign similarity score for each desired quality attribute if available
             foreach ($analyses as $analysis) {
                 $attribute = $analysis->quality_attribute;
                 if (in_array($attribute, $desiredAttributes)) {
                     $qualityData[$attribute] = $analysis->similarity_score;
                 }
             }
-
-            // Calculate the total similarity score for sorting purposes
             $totalScore = array_sum(array_filter($qualityData));
 
-            // Build the result object for this project
             $results[] = array_merge(['name' => $project->name, 'total_score' => $totalScore], $qualityData);
         }
 
@@ -73,7 +66,6 @@ class SearchController extends Controller
         // Take the top 10 results
         $topResults = array_slice($results, 0, 10);
 
-        // Return the results along with pagination meta data
         return response()->json([
             'data' => $topResults,
             'meta' => [
