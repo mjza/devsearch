@@ -31,7 +31,7 @@ class SearchController extends Controller
         // Use pagination to limit the number of projects loaded per request
         $projects = $projectsQuery->paginate(50);
 
-
+        // just mock can change thisd datastructure to get what we want
         $desiredAttributes = [
             'performance',
             'usability',
