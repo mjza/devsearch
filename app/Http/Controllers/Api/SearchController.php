@@ -3,49 +3,66 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\QualityAnalysis;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class SearchController extends Controller
 {
+    /**
+     * Search projects and return project name with quality attributes.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function search(Request $request)
     {
-        // Retrieve the query parameter
+        // Get the search query parameter
         $query = $request->input('q');
-        
-        // If no query is provided, return an empty array
+
+        // If no query provided, return an empty array
         if (!$query) {
             return response()->json([]);
         }
 
-        $projects = Project::where('name', 'LIKE', "%$query%")
-            ->orWhere('description', 'LIKE', "%$query%")
+        // Search for projects by name or description
+        $projects = Project::where('name', 'LIKE', "%{$query}%")
+            ->orWhere('description', 'LIKE', "%{$query}%")
             ->get();
 
-        // Initialize an array to hold the results
+        // Define the desired quality attributes
+        $desiredAttributes = [
+            'performance',
+            'usability',
+            'security',
+            'maintainability',
+        ];
+
         $results = [];
 
         foreach ($projects as $project) {
-            $qualityAnalyses = QualityAnalysis::where('project_id', $project->id)->get();
+            // Initialize quality data with default null values
+            $qualityData = array_fill_keys($desiredAttributes, null);
 
-            $qualityAttributes = [];
-            foreach ($qualityAnalyses as $analysis) {
-                $qualityAttributes[$analysis->quality_attribute] = $analysis->similarity_score;
+            // Retrieve all quality analyses for the current project
+            $analyses = QualityAnalysis::where('project_id', $project->id)->get();
+
+            // Assign similarity score for each desired quality attribute if available
+            foreach ($analyses as $analysis) {
+                $attribute = $analysis->quality_attribute;
+                if (in_array($attribute, $desiredAttributes)) {
+                    $qualityData[$attribute] = $analysis->similarity_score;
+                }
             }
-            arsort($qualityAttributes);
 
-            // Get the top 10 quality attributes (if applicable)
-            $topQualityAttributes = array_slice($qualityAttributes, 0, 10, true);
-
-            // Build the result for this project
-            $results[] = [
-                'project_name' => $project->name,
-                'quality_attributes' => $topQualityAttributes,
-            ];
+            // Build the result object for this project
+            $results[] = array_merge(
+                ['name' => $project->name],
+                $qualityData
+            );
         }
 
+        // Return the results as JSON
         return response()->json($results);
     }
 }
