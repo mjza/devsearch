@@ -11,7 +11,7 @@ class DataSeeder extends Seeder
     public function run(): void
     {
         // Path to the CSV file
-        $csvFile = base_path('database/data/projects_202503281038.csv');
+        $csvFile = base_path('database/data/projects.csv');
 
         // Open the CSV file
         if (($handle = fopen($csvFile, 'r')) !== false) {
