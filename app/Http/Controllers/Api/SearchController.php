@@ -20,12 +20,52 @@ class SearchController extends Controller
         }
 
         // Only get projects that have at least one related top_quality_attribute
-        $projects = Project::where(function ($q) use ($query) {
-                $q->where('name', 'LIKE', "%{$query}%")
-                  ->orWhere('description', 'LIKE', "%{$query}%");
-            })
-            ->whereHas('topQualityAttributes') // ensures only projects with related records
-            ->with('topQualityAttributes')     // eager-load relationship
+        $query = strtolower($request->input('q'));
+
+        if (!$query) {
+            return response()->json([]);
+        }
+
+        // Detect query type
+        $searchMode = 'single';
+        $terms = [$query];
+
+        if (str_contains($query, ' or ')) {
+            $searchMode = 'or';
+            $terms = explode(' or ', $query);
+        } elseif (str_contains($query, ' and ')) {
+            $searchMode = 'and';
+            $terms = explode(' and ', $query);
+        } elseif (str_contains($query, ' vs ')) {
+            $searchMode = 'vs';
+            $terms = explode(' vs ', $query);
+        }
+
+        // Trim terms
+        $terms = array_map('trim', $terms);
+
+        // Build query based on mode
+        $projects = Project::where(function ($q) use ($terms, $searchMode) {
+            if ($searchMode === 'or' || $searchMode === 'vs') {
+                foreach ($terms as $term) {
+                    $q->orWhere('name', 'LIKE', "%{$term}%")
+                        ->orWhere('description', 'LIKE', "%{$term}%");
+                }
+            } elseif ($searchMode === 'and') {
+                foreach ($terms as $term) {
+                    $q->where(function ($subQ) use ($term) {
+                        $subQ->where('name', 'LIKE', "%{$term}%")
+                            ->orWhere('description', 'LIKE', "%{$term}%");
+                    });
+                }
+            } else {
+                $term = $terms[0];
+                $q->where('name', 'LIKE', "%{$term}%")
+                    ->orWhere('description', 'LIKE', "%{$term}%");
+            }
+        })
+            ->whereHas('topQualityAttributes')
+            ->with('topQualityAttributes')
             ->paginate(50);
 
         $results = [];
@@ -40,14 +80,21 @@ class SearchController extends Controller
 
             $totalScore = array_sum(array_filter($qualityData));
 
-            $results[] = array_merge(
-                ['name' => $project->name, 'total_score' => $totalScore],
-                $qualityData
-            );
+            $results[] = [
+                'name' => $project->name,
+                'description' => $project->description,
+                'homepage' => $project->homepage,
+                'language' => $project->language,
+                'repository_url' => $project->repository_url,
+                'keywords' => $project->keywords,
+                'normalized_licenses' => $project->normalized_licenses,
+                'total_score' => $totalScore,
+                'quality_attributes' => $qualityData
+            ];
         }
 
         // Sort results by total score descending
-        usort($results, fn ($a, $b) => $b['total_score'] <=> $a['total_score']);
+        usort($results, fn($a, $b) => $b['total_score'] <=> $a['total_score']);
 
         // Take top 10 results
         $topResults = array_slice($results, 0, 10);
