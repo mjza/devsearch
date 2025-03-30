@@ -3,12 +3,40 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use App\Models\QualityAnalysis;
 
 class DataSeeder extends Seeder
 {
     public function run(): void
     {
+        // Path to the CSV file
+        $csvFile = base_path('database/data/projects_202503281038.csv');
+
+        // Open the CSV file
+        if (($handle = fopen($csvFile, 'r')) !== false) {
+            // Skip the header row
+            fgetcsv($handle);
+
+            // Loop through the file, read data and insert into database
+            while (($data = fgetcsv($handle, 1000, ',')) !== false) {
+                DB::table('projects')->insert([
+                    'name' => $data[0],
+                    'platform' => $data[1],
+                    'description' => $data[2],
+                    'homepage' => $data[3],
+                    'language' => $data[4],
+                    'repository_url' => $data[5],
+                    'keywords' => $data[6],
+                    'normalized_licenses' => $data[7],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            // Close the file
+            fclose($handle);
+        }
         // Open CSV file for quality analysis
         $qaCsv = fopen(base_path('database/data/quality_attribute_analysis.csv'), 'r');
         
