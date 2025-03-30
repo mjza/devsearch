@@ -1,10 +1,10 @@
 * text=auto eol=lf
-
 *.blade.php diff=html
 *.css diff=css
 *.html diff=html
 *.md diff=markdown
 *.php diff=php
-
 CHANGELOG.md export-ignore
 README.md export-ignore
+database/data/projects_202503281038.csv filter=lfs diff=lfs merge=lfs -text
+database/data/projects.csv filter=lfs diff=lfs merge=lfs -text
