@@ -10,7 +10,7 @@ class QualityAnalysesSeeder extends Seeder
 {
     public function run()
     {
-        $csvFile = base_path('database/data/quality_analyses.csv'); // Adjust the file path
+        $csvFile = base_path('database/data/quality_attribute_analysis.csv'); // Adjust the file path
 
         if (($handle = fopen($csvFile, 'r')) !== false) {
             // Skip the header row
