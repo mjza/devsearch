@@ -11,7 +11,8 @@ class NewsItemController extends Controller
 {
     public function latest(): JsonResponse
     {
-        $latestNews = NewsItem::orderBy('timestamp', 'desc')
+        $latestNews = NewsItem::where('is_valid', true)
+            ->orderBy('timestamp', 'desc')
             ->take(10)
             ->get();
 
