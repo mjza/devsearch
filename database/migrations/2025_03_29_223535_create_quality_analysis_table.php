@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->string('sentiment', 10)->default('-');
             $table->float('similarity_score')->check('similarity_score >= 0 AND similarity_score <= 1');
             $table->unsignedBigInteger('issue_id');
-            $table->text('reasoning');
+            $table->text('reasoning')->nullable();
             $table->timestamps();
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
