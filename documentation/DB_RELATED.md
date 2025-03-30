@@ -188,18 +188,20 @@ FROM (
            ROW_NUMBER() OVER (PARTITION BY project_id, sentiment ORDER BY similarity_score DESC) AS rank
     FROM quality_analyses
     WHERE sentiment = '+'
+        AND typeof(issue_id) = 'integer'
 ) sub
 WHERE rank <= 10;
 
 
 -- Insert top 10 negative attributes per project
-INSERT INTO top_quality_attributes (project_id, quality_attribute, sentiment, similarity_score, issue_id, reasoning)
-SELECT project_id, quality_attribute, sentiment, similarity_score, issue_id, reasoning
+INSERT INTO top_quality_attributes (id, project_id, quality_attribute, sentiment, similarity_score, issue_id, reasoning)
+SELECT id, project_id, quality_attribute, sentiment, -1 * similarity_score AS similarity_score, issue_id, reasoning
 FROM (
     SELECT *,
            ROW_NUMBER() OVER (PARTITION BY project_id, sentiment ORDER BY similarity_score DESC) AS rank
     FROM quality_analyses
     WHERE sentiment = '-'
+    	AND typeof(issue_id) = 'integer'
 ) sub
 WHERE rank <= 10;
 
