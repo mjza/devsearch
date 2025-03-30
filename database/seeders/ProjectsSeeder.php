@@ -10,7 +10,7 @@ class ProjectsSeeder extends Seeder
 {
     public function run()
     {
-        $csvFile = base_path('database/data/projects_202503281038.csv'); // Adjust the file path
+        $csvFile = base_path('database/data/projects.csv'); // Adjust the file path
 
         if (($handle = fopen($csvFile, 'r')) !== false) {
             // Skip the header row
