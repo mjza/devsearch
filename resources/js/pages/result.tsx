@@ -20,10 +20,13 @@ export default function Results() {
             </Head>
             <div className="flex min-h-screen mx-35 flex-col items-center justify-between bg-[#F9FAFB] text-[#1b1b18] dark:bg-[#0a0a0a]">
                 <SiteHeader />
-
-                <SearchBox title="Find and Compare Components" query={query ?? undefined}/>
                 
-                <SearchResultsTable query={query ?? ''} />
+                {/* Main body */}
+                <div className="flex-1 flex flex-col min-w-full items-center justify-start px-6 py-4">
+                    <SearchBox title="Find and Compare Components" query={query ?? undefined}/>
+                    
+                    <SearchResultsTable query={query ?? ''} />
+                </div>
                 
                 {/* Footer */}
                 <SiteFooter />
