@@ -89,6 +89,7 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
                   <div><strong>Description:</strong> {project.description}</div>
                   <div><strong>Keywords:</strong> {formatKeywords(project.keywords)}</div>
                   <div><strong>Homepage:</strong> <a href={project.homepage} className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">{project.homepage}</a></div>
+                  <div><strong>License:</strong> {formatKeywords(project.normalized_licenses)}</div>
                   <div><strong>Total Score:</strong> {project.total_score.toFixed(3)}</div>
                 </td>
               </tr>
