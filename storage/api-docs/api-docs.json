@@ -119,6 +119,466 @@
                     }
                 }
             }
+        },
+        "/auth/confirm-password": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Show confirm password page",
+                "description": "Show the confirm password page.",
+                "operationId": "b2362a0dc3bd6a97955eba071e1dd5af",
+                "responses": {
+                    "200": {
+                        "description": "Returns the confirm password page",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Confirm user's password",
+                "description": "Confirm the user's password.",
+                "operationId": "7f0907a84f8c448158b2e17bfc0750b9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "password"
+                                ],
+                                "properties": {
+                                    "password": {
+                                        "type": "string",
+                                        "example": "your-password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password confirmed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "password": {
+                                            "type": "string",
+                                            "example": "The password is incorrect."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/email/verification-notification": {
+            "post": {
+                "tags": [
+                    "Email Verification"
+                ],
+                "summary": "Send a new email verification notification",
+                "description": "Sends a new email verification notification to the user.",
+                "operationId": "4aba82382e705a3e61d6204e2b313ebd",
+                "requestBody": {
+                    "description": "No request body required for this endpoint.",
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": "Verification link sent successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "verification-link-sent"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "302": {
+                        "description": "Redirects if the user has already verified their email."
+                    }
+                }
+            }
+        },
+        "/email/verify": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Email Verification Prompt",
+                "description": "Displays the email verification prompt page or redirects to the dashboard if the email is already verified.",
+                "operationId": "4b827d276f46c16e5fc96596a67d53cd",
+                "requestBody": {
+                    "description": "No request body required.",
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email verification prompt page rendered.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Status message from the session.",
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "302": {
+                        "description": "Redirect to the dashboard if the email is verified."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Verify email address",
+                "description": "Marks the authenticated user's email address as verified.",
+                "operationId": "verifyEmail",
+                "requestBody": {
+                    "description": "Email verification request",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user@example.com"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "example": "verification-token"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "302": {
+                        "description": "Redirects to the dashboard with a verified query parameter."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/auth/reset-password": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Show the password reset page",
+                "description": "Show the password reset page.",
+                "operationId": "99b2b70b81863d300047b5d034c7710a",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "User email address",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "email"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Password reset token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Password reset page rendered successfully"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Reset the user's password",
+                "description": "Handle an incoming new password request.",
+                "operationId": "2cb7de23af73f1925f2d817570dd26b9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "token",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "description": "Password reset token",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "User email address",
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "description": "New password",
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "Password confirmation",
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/auth/forgot-password": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Display the password reset link request page",
+                "description": "Show the password reset link request page.",
+                "operationId": "c1542051fec30e69a162ce17ac1befb0",
+                "responses": {
+                    "200": {
+                        "description": "Password reset link request page rendered successfully"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send a password reset link to the user's email",
+                "description": "Handle an incoming password reset link request.",
+                "operationId": "90feb463f5c195b043a573b4236115a5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "302": {
+                        "description": "Redirect back with status message"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/register": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Display the registration page",
+                "description": "Show the registration page.",
+                "operationId": "showRegistrationPage",
+                "responses": {
+                    "200": {
+                        "description": "Registration page rendered successfully"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new user",
+                "description": "Handle an incoming registration request.",
+                "operationId": "registerUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/settings/password": {
+            "get": {
+                "tags": [
+                    "Password"
+                ],
+                "summary": "Show the user's password settings page",
+                "description": "Show the user's password settings page.",
+                "operationId": "42443bf427dc908dc6f26d7848364ee8",
+                "responses": {
+                    "200": {
+                        "description": "Password settings page rendered successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Password"
+                ],
+                "summary": "Update the user's password",
+                "description": "Update the user's password.",
+                "operationId": "a24791f31a8b35cd746c496303c867ce",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "current_password",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "current_password": {
+                                        "type": "string",
+                                        "example": "current_password123"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "new_password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "new_password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password updated successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -240,6 +700,22 @@
         {
             "name": "Search",
             "description": "Search related operations"
+        },
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Email Verification",
+            "description": "Email Verification"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Password",
+            "description": "Password"
         }
     ]
 }
