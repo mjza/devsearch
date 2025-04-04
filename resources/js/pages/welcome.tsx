@@ -19,7 +19,7 @@ export default function Welcome() {
 
                 {/* Title */}
                 <div className="text-center font-bold text-[36px] leading-[1.11111] max-w-[550px] font-sans mt-6 mb-4 text-black dark:text-white">
-                    Find and Compare Software Components
+                    Leverage AI to Find and Compare Software Components
                 </div>
 
                 {/* Sub Title */}
