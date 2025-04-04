@@ -5,6 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+/**
+ * @OA\Schema(
+ *     schema="TopQualityAttribute",
+ *     type="object",
+ *     @OA\Property(property="id", type="integer"),
+ *     @OA\Property(property="project_id", type="integer"),
+ *     @OA\Property(property="quality_attribute", type="string"),
+ *     @OA\Property(property="sentiment", type="string"),
+ *     @OA\Property(property="similarity_score", type="number", format="float"),
+ *     @OA\Property(property="issue_id", type="integer"),
+ *     @OA\Property(property="reasoning", type="string")
+ * )
+ */
 class TopQualityAttribute extends Model
 {
     use HasFactory;

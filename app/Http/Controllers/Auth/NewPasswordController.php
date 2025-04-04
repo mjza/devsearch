@@ -18,6 +18,30 @@ class NewPasswordController extends Controller
 {
     /**
      * Show the password reset page.
+     *
+     * @OA\Get(
+     *     path="/auth/reset-password",
+     *     summary="Show the password reset page",
+     *     tags={"Authentication"},
+     *     @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         required=false,
+     *         description="User email address",
+     *         @OA\Schema(type="string", format="email")
+     *     ),
+     *     @OA\Parameter(
+     *         name="token",
+     *         in="query",
+     *         required=true,
+     *         description="Password reset token",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password reset page rendered successfully"
+     *     )
+     * )
      */
     public function create(Request $request): Response
     {
@@ -29,6 +53,30 @@ class NewPasswordController extends Controller
 
     /**
      * Handle an incoming new password request.
+     *
+     * @OA\Post(
+     *     path="/auth/reset-password",
+     *     summary="Reset the user's password",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"token", "email", "password", "password_confirmation"},
+     *             @OA\Property(property="token", type="string", description="Password reset token"),
+     *             @OA\Property(property="email", type="string", format="email", description="User email address"),
+     *             @OA\Property(property="password", type="string", format="password", description="New password"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", description="Password confirmation")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password reset successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
+     * )
      *
      * @throws \Illuminate\Validation\ValidationException
      */

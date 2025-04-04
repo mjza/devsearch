@@ -4,6 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *     schema="NewsItem",
+ *     type="object",
+ *     @OA\Property(property="id", type="integer"),
+ *     @OA\Property(property="tag", type="string"),
+ *     @OA\Property(property="title", type="string"),
+ *     @OA\Property(property="description", type="string"),
+ *     @OA\Property(property="timestamp", type="string", format="date-time"),
+ *     @OA\Property(property="link", type="string"),
+ *     @OA\Property(property="is_valid", type="boolean")
+ * )
+ */
 class NewsItem extends Model
 {
     protected $table = 'news_items';

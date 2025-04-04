@@ -5,11 +5,46 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Project;
-
+/**
+ * @OA\Tag(name="Search", description="Search related operations")
+ */
 class SearchController extends Controller
 {
     /**
-     * Search projects and return project name with quality attributes.
+     * @OA\Get(
+     *     path="/api/search",
+     *     summary="Search projects based on query string",
+     *     tags={"Search"},
+     *     @OA\Parameter(
+     *         name="q",
+     *         in="query",
+     *         required=true,
+     *         description="Search query string",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Search results",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", 
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="name", type="string", example="Project 1"),
+     *                     @OA\Property(property="description", type="string", example="Description of the project"),
+     *                     @OA\Property(property="total_score", type="number", format="float", example=85.5)
+     *                 )
+     *             ),
+     *             @OA\Property(
+     *                 property="meta",
+     *                 type="object",
+     *                 @OA\Property(property="current_page", type="integer", example=1),
+     *                 @OA\Property(property="last_page", type="integer", example=10),
+     *                 @OA\Property(property="total", type="integer", example=100)
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function search(Request $request)
     {
