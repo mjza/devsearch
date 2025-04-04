@@ -14,6 +14,17 @@ class ConfirmablePasswordController extends Controller
 {
     /**
      * Show the confirm password page.
+     *
+     * @OA\Get(
+     *     path="/auth/confirm-password",
+     *     summary="Show confirm password page",
+     *     tags={"Authentication"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Returns the confirm password page",
+     *         @OA\JsonContent()
+     *     )
+     * )
      */
     public function show(): Response
     {
@@ -22,6 +33,31 @@ class ConfirmablePasswordController extends Controller
 
     /**
      * Confirm the user's password.
+     *
+     * @OA\Post(
+     *     path="/auth/confirm-password",
+     *     summary="Confirm user's password",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"password"},
+     *             @OA\Property(property="password", type="string", example="your-password")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password confirmed successfully",
+     *         @OA\JsonContent()
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="password", type="string", example="The password is incorrect.")
+     *         )
+     *     )
+     * )
      */
     public function store(Request $request): RedirectResponse
     {
