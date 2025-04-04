@@ -121,6 +121,117 @@
             }
         }
     },
+    "components": {
+        "schemas": {
+            "NewsItem": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "tag": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "timestamp": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "link": {
+                        "type": "string"
+                    },
+                    "is_valid": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "Project": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "platform": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "homepage": {
+                        "type": "string"
+                    },
+                    "language": {
+                        "type": "string"
+                    },
+                    "repository_url": {
+                        "type": "string"
+                    },
+                    "keywords": {
+                        "type": "string"
+                    },
+                    "normalized_licenses": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TopQualityAttribute": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "project_id": {
+                        "type": "integer"
+                    },
+                    "quality_attribute": {
+                        "type": "string"
+                    },
+                    "sentiment": {
+                        "type": "string"
+                    },
+                    "similarity_score": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "issue_id": {
+                        "type": "integer"
+                    },
+                    "reasoning": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
     "tags": [
         {
             "name": "News",
