@@ -105,9 +105,9 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
         </div>
       )}
       {!loading && projects.map((project, index) => {
-        const cleanHomepage =  extractCleanGitHubURL(project.homepage);
+        const cleanRepositoryUrl =  extractCleanGitHubURL(project.repository_url);
 
-        if (!cleanHomepage) 
+        if (!cleanRepositoryUrl) 
           return null;
         
         const attributes = Object.keys(project.quality_attributes || {}).sort((a, b) => a.localeCompare(b));
@@ -119,7 +119,7 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
               <div><strong>Name:</strong> {project.name}</div>
               <div><strong>Description:</strong> {project.description}</div>
               <div><strong>Keywords:</strong> {formatKeywords(project.keywords)}</div>
-              <div><strong>Homepage:</strong> <a href={cleanHomepage} className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">{cleanHomepage}</a></div>
+              <div><strong>Homepage:</strong> <a href={project.homepage} className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">{project.homepage}</a></div>
               <div><strong>License:</strong> {formatKeywords(project.normalized_licenses)}</div>
               <div><strong>Total Score:</strong> {project.total_score.toFixed(3)}</div>
             </div>
@@ -152,7 +152,7 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
           {issues.map((issue, idx) => (
             <a
               key={idx}
-              href={`${cleanHomepage}/issues/${issue.issue_number}`}
+              href={`${cleanRepositoryUrl}/issues/${issue.issue_number}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 underline text-xs whitespace-nowrap"
