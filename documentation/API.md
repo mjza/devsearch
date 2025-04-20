@@ -2,7 +2,7 @@
 
 This document speaks about API related stuffs.
 
-## I. Making APIs for site
+## I. Making APIs from scratch
 
 Make the controller lives under `**app/Http/Controllers/Api**`.
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Project;
+use App\Models\ProjectTopAttribute;
+
 /**
  * @OA\Tag(name="Search", description="Search related operations")
  */
@@ -32,15 +34,35 @@ class SearchController extends Controller
      *                     type="object",
      *                     @OA\Property(property="name", type="string", example="Project 1"),
      *                     @OA\Property(property="description", type="string", example="Description of the project"),
-     *                     @OA\Property(property="total_score", type="number", format="float", example=85.5)
+     *                     @OA\Property(property="homepage", type="string", example="https://github.com/example/project"),
+     *                     @OA\Property(property="language", type="string", example="PHP"),
+     *                     @OA\Property(property="repository_url", type="string", example="https://github.com/example/project"),
+     *                     @OA\Property(property="keywords", type="string", example="api,laravel,swagger"),
+     *                     @OA\Property(property="normalized_licenses", type="string", example="MIT"),
+     *                     @OA\Property(property="total_score", type="number", format="float", example=85.5),
+     *                     @OA\Property(property="quality_attributes", type="object", example={"usability": -68.2, "versioning": 23.0}),
+     *                     @OA\Property(
+     *                         property="issue_ids",
+     *                         type="object",
+     *                         example={
+     *                             "usability": {
+     *                                 { "issue_id": 49850241, "score": -68.214 },
+     *                                 { "issue_id": 41190406, "score": -52.781 }
+     *                             },
+     *                             "versioning": {
+     *                                 { "issue_id": 127008841, "score": 23.041 }
+     *                             }
+     *                         }
+     *                     )
      *                 )
      *             ),
      *             @OA\Property(
      *                 property="meta",
      *                 type="object",
      *                 @OA\Property(property="current_page", type="integer", example=1),
-     *                 @OA\Property(property="last_page", type="integer", example=10),
-     *                 @OA\Property(property="total", type="integer", example=100)
+     *                 @OA\Property(property="last_page", type="integer", example=1),
+     *                 @OA\Property(property="per_page", type="integer", example=10),
+     *                 @OA\Property(property="total", type="integer", example=1)
      *             )
      *         )
      *     )
@@ -48,20 +70,12 @@ class SearchController extends Controller
      */
     public function search(Request $request)
     {
-        $query = $request->input('q');
-
-        if (!$query) {
-            return response()->json([]);
-        }
-
-        // Only get projects that have at least one related top_quality_attribute
         $query = strtolower($request->input('q'));
 
         if (!$query) {
             return response()->json([]);
         }
 
-        // Detect query type
         $searchMode = 'single';
         $terms = [$query];
 
@@ -76,10 +90,8 @@ class SearchController extends Controller
             $terms = explode(' vs ', $query);
         }
 
-        // Trim terms
         $terms = array_map('trim', $terms);
 
-        // Build query based on mode
         $projects = Project::where(function ($q) use ($terms, $searchMode) {
             if ($searchMode === 'or' || $searchMode === 'vs') {
                 foreach ($terms as $term) {
@@ -99,18 +111,20 @@ class SearchController extends Controller
                     ->orWhere('description', 'LIKE', "%{$term}%");
             }
         })
-            ->whereHas('topQualityAttributes')
-            ->with('topQualityAttributes')
-            ->paginate(50);
+        ->whereIn('id', ProjectTopAttribute::distinct()->pluck('project_id'))
+        ->paginate(50);
 
         $results = [];
 
         foreach ($projects->items() as $project) {
-            $qualityData = [];
+            $topAttrs = ProjectTopAttribute::where('project_id', $project->id)->get();
 
-            foreach ($project->topQualityAttributes as $analysis) {
-                $attribute = $analysis->quality_attribute;
-                $qualityData[$attribute] = $analysis->similarity_score;
+            $qualityData = [];
+            $issueIdMap = [];
+
+            foreach ($topAttrs as $attr) {
+                $qualityData[$attr->criteria] = $attr->avg_similarity_score;
+                $issueIdMap[$attr->criteria] = $attr->issue_ids ?? [];
             }
 
             $totalScore = array_sum(array_filter($qualityData));
@@ -124,14 +138,12 @@ class SearchController extends Controller
                 'keywords' => $project->keywords,
                 'normalized_licenses' => $project->normalized_licenses,
                 'total_score' => $totalScore,
-                'quality_attributes' => $qualityData
+                'quality_attributes' => $qualityData,
+                'issue_ids' => $issueIdMap,
             ];
         }
 
-        // Sort results by total score descending
         usort($results, fn($a, $b) => $b['total_score'] <=> $a['total_score']);
-
-        // Take top 10 results
         $topResults = array_slice($results, 0, 10);
 
         return response()->json([
