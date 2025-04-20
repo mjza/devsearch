@@ -21,6 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+
+        // Register the Swagger route middleware
+        $middleware->alias([
+            'swagger.auth' => \App\Http\Middleware\SwaggerAuth::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
