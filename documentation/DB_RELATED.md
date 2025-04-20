@@ -1,5 +1,51 @@
+# Database
 
-## CREATE TABEL
+This document speaks about related items to database.
+
+## SETUP DB Connection
+
+### ✅ 1. Configure Database in `.env`
+
+If using MySQL from XAMPP, set this in your `.env` file:
+
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=devsearch
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+> Create the `devsearch` database via **phpMyAdmin** or **MySQL CLI**.
+
+---
+
+### ✅ 2. Run Migrations
+
+```bash
+php artisan migrate
+```
+
+Or:
+
+```bash
+"C:\xampp\php\php.exe" artisan migrate
+```
+
+### ✅ 3. Troubleshooting
+
+In case the system remembers the path DB settings, try to clean up caches:
+
+```bash
+php artisan optimize:clear
+php artisan config:clear
+php artisan cache:clear
+php artisan route:clear
+php artisan view:clear
+```
+
+## CREATE A NEW TABEL
 
 To create a migration file in Laravel for your `news_items` table, follow these steps:
 
@@ -154,7 +200,9 @@ php artisan migrate:fresh --seed
 
 ---
 
-### ✅ 7. **Feeding top_quality_attributes table**
+## SQL SCRIPTS FOR POSTGRES
+
+### ✅ 1. **Feeding top_quality_attributes table**
 
 ```sql
 -- Step 1: Create the new table to store AI results
@@ -206,4 +254,136 @@ FROM (
 WHERE rank <= 10;
 
 
+```
+
+### ✅ 2. **Feeding top_quality_attributes table**
+
+```sql
+/* -------------------------------------------------------------
+   1.  TABLE DEFINITION
+   ------------------------------------------------------------- */
+DROP TABLE IF EXISTS project_top_attributes;
+
+CREATE TABLE project_top_attributes (
+    project_id        INTEGER      NOT NULL,
+    criteria          TEXT         NOT NULL,
+    avg_similarity_score  NUMERIC(12,3) NOT NULL,
+    issue_ids         JSONB        NOT NULL,     -- array of {issue_id, score}
+    diff_from_mean    NUMERIC(12,6) NOT NULL,    -- keeps the distance value
+    PRIMARY KEY (project_id, criteria)
+);
+
+/* Optional but handy: quickly get “most extreme” attributes per project */
+CREATE INDEX idx_pta_project_absdiff
+        ON project_top_attributes (project_id, ABS(diff_from_mean) DESC);
+
+/* -------------------------------------------------------------
+   2.  POPULATE THE TABLE
+   ------------------------------------------------------------- */
+TRUNCATE project_top_attributes;
+
+INSERT INTO project_top_attributes (
+        project_id,
+        criteria,
+        avg_similarity_score,
+        issue_ids,
+        diff_from_mean
+)
+-- Variant A – show the average score per issue
+WITH raw AS (
+    SELECT  project_id,
+            criteria,
+            issue_id,
+            /* Multiply by -1 if semantic='-' */
+            similarity_score * CASE WHEN semantic = '-' THEN -1 ELSE 1 END
+                   AS signed_score
+    FROM    quality_attribute_analysis
+),
+/* 1) Per-criterion average */
+criterion_stats AS (
+    SELECT  project_id,
+            criteria,
+            AVG(signed_score) AS avg_score  -- double precision
+    FROM    raw
+    GROUP BY project_id, criteria
+),
+/* 2) Project-wide mean of those averages */
+project_stats AS (
+    SELECT  project_id,
+            AVG(avg_score) AS overall_avg
+    FROM    criterion_stats
+    GROUP BY project_id
+),
+/* 3) Distance from project mean (no ROW_NUMBER yet) */
+criterion_diff AS (
+    SELECT  cs.project_id,
+            cs.criteria,
+            cs.avg_score,
+            cs.avg_score - ps.overall_avg      AS diff_from_mean,
+            ABS(cs.avg_score - ps.overall_avg) AS abs_diff
+    FROM    criterion_stats cs
+    JOIN    project_stats   ps USING (project_id)
+),
+/* 4) We apply ROW_NUMBER in a separate step */
+ranked_diff AS (
+    SELECT  cd.*,
+            ROW_NUMBER() OVER (
+                PARTITION BY cd.project_id
+                ORDER BY cd.abs_diff DESC
+            ) AS rn
+    FROM    criterion_diff cd
+),
+/* 5) Keep only the top 10 per project */
+top_attr AS (
+    SELECT  *
+    FROM    ranked_diff
+    WHERE   rn <= 10
+),
+/* 6) Within those top-10 criteria, compute the average score per issue */
+issue_averages AS (
+    SELECT  t.project_id,
+            t.criteria,
+            r.issue_id,
+            AVG(r.signed_score) AS contrib_score
+    FROM    raw r
+    JOIN    top_attr t
+      ON    r.project_id = t.project_id
+     AND    r.criteria   = t.criteria
+    GROUP BY t.project_id, t.criteria, r.issue_id
+),
+/* 7) Rank them by absolute average (top 3 issues) */
+ranked_contrib AS (
+    SELECT  ia.*,
+            ROW_NUMBER() OVER (
+                PARTITION BY ia.project_id, ia.criteria
+                ORDER BY ABS(ia.contrib_score) DESC
+            ) AS rnk
+    FROM    issue_averages ia
+)
+/* 8) Final SELECT: for each attribute, gather the top-3 issues */
+SELECT  
+    t.project_id,
+    t.criteria,
+    ROUND(t.avg_score::numeric, 3) AS avg_similarity_score,
+    jsonb_agg(
+        jsonb_build_object(
+            'issue_id', issue_id,
+            'score',    ROUND(contrib_score::numeric, 3)
+        )
+        ORDER BY ABS(contrib_score) DESC
+    ) AS issue_ids,
+    t.diff_from_mean
+FROM   top_attr       t
+JOIN   ranked_contrib c
+   ON  c.project_id = t.project_id
+  AND  c.criteria   = t.criteria
+WHERE  c.rnk <= 3
+GROUP BY
+    t.project_id,
+    t.criteria,
+    t.avg_score,
+    t.diff_from_mean
+ORDER BY
+    t.project_id,
+    ABS(t.diff_from_mean) DESC;
 ```
