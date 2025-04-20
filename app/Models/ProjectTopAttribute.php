@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  *         @OA\Items(
  *             type="object",
  *             @OA\Property(property="issue_id", type="integer", example=49850241),
+ *              @OA\Property(property="issue_number", type="integer", example=5),
  *             @OA\Property(property="score", type="number", format="float", example=-68.214)
  *         )
  *     ),

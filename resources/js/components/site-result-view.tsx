@@ -6,6 +6,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+interface IssueReference {
+  issue_id: number;
+  issue_number: number;
+  score: number;
+}
+
 interface Project {
   name: string;
   description: string;
@@ -16,7 +22,9 @@ interface Project {
   normalized_licenses: string;
   total_score: number;
   quality_attributes: Record<string, number>;
+  issue_ids: Record<string, IssueReference[]>;  // new field
 }
+
 
 interface SearchResultsTableProps {
   query: string;
@@ -43,6 +51,8 @@ const formatKeywords = (raw: string): string => {
   }
 };
 
+
+
 const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -56,6 +66,23 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [query]);
+
+  function extractCleanGitHubURL(inputUrl: string) {
+    if (!inputUrl?.trim()) return null;
+  
+    // Regular expression to match GitHub URLs
+    const regex = /^https?:\/\/(?:www\.)?github\.com\/([^\/\s]+)\/([^\/\s#]+)(?:[\/#]|$)/i;
+    const match = inputUrl.match(regex);
+  
+    if (match && match[1] && match[2]) {
+      const owner = match[1];
+      const repo = match[2].replace(/\.git$/, ''); // Remove .git if present
+      return `https://github.com/${owner}/${repo}`;
+    }
+  
+    return null; // Return null if the URL doesn't match the expected pattern
+  }
+  
 
   return (
     <div className="flex-1 flex flex-col min-w-full items-center justify-start px-6 py-4">
@@ -78,53 +105,73 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
         </div>
       )}
       {!loading && projects.map((project, index) => {
+        const cleanHomepage =  extractCleanGitHubURL(project.homepage);
+
+        if (!cleanHomepage) 
+          return null;
+        
         const attributes = Object.keys(project.quality_attributes || {}).sort((a, b) => a.localeCompare(b));
+
         return (
-          <table key={index} className="table-auto border-collapse w-full my-6">
-            <tbody>
-              {/* Row 1: Project Info */}
-              <tr className="bg-gray-50">
-                <td className="px-2 py-1" colSpan={attributes.length + 1}>
-                  <div><strong>Name:</strong> {project.name}</div>
-                  <div><strong>Description:</strong> {project.description}</div>
-                  <div><strong>Keywords:</strong> {formatKeywords(project.keywords)}</div>
-                  <div><strong>Homepage:</strong> <a href={project.homepage} className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">{project.homepage}</a></div>
-                  <div><strong>License:</strong> {formatKeywords(project.normalized_licenses)}</div>
-                  <div><strong>Total Score:</strong> {project.total_score.toFixed(3)}</div>
-                </td>
-              </tr>
+          <div key={index} className="container mx-auto px-4 bg-white border rounded-lg shadow-md p-4 my-6">
+            {/* Project Info */}
+            <div className="mb-4 space-y-1 text-sm">
+              <div><strong>Name:</strong> {project.name}</div>
+              <div><strong>Description:</strong> {project.description}</div>
+              <div><strong>Keywords:</strong> {formatKeywords(project.keywords)}</div>
+              <div><strong>Homepage:</strong> <a href={cleanHomepage} className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">{cleanHomepage}</a></div>
+              <div><strong>License:</strong> {formatKeywords(project.normalized_licenses)}</div>
+              <div><strong>Total Score:</strong> {project.total_score.toFixed(3)}</div>
+            </div>
 
-              {/* Row 2: Attribute Names */}
-              <tr className="bg-gray-100 border">
-                <td className="border px-2 py-1 font-semibold text-center">Attributes</td>
-                {attributes
-                .map(attr => (
-                  <td key={attr} className="border px-2 py-1 text-center text-xs font-bold">
-                    {attr}
-                  </td>
-                ))}
-              </tr>
+            {/* Attributes */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+  {attributes.map(attr => {
+    const score = project.quality_attributes[attr];
+    const issues = project.issue_ids?.[attr] || [];
 
-              {/* Row 3: Scores */}
-              <tr className="border">
-                <td className="border px-2 py-1 font-semibold text-center">Scores</td>
-                {attributes
-                .map(attr => {
-                  const score = project.quality_attributes[attr];
-                  return (
-                    <td
-                      key={attr}
-                      className={`border px-2 py-1 text-center ${getColor(score)}`}
-                    >
-                      {score !== undefined ? score.toFixed(3) : '-'}
-                    </td>
-                  );
-                })}
-              </tr>
-            </tbody>
-          </table>
+    return (
+      <div
+        key={attr}
+        className="flex flex-wrap items-center justify-between bg-gray-50 border rounded p-2 gap-x-4 gap-y-2"
+      >
+        {/* Left: Attribute */}
+        <div className="text-sm font-semibold text-gray-700 whitespace-nowrap">
+          {attr}
+        </div>
+
+        {/* Center: Score */}
+        <div className="flex-1 flex justify-end min-w-[100px]">
+          <div className={`text-sm font-bold ${getColor(score)} whitespace-nowrap`}>
+            {score !== undefined ? score.toFixed(3) : '-'}
+          </div>
+        </div>
+
+        {/* Right: Links */}
+        <div className="flex flex-wrap gap-2 justify-end min-w-fit ml-auto">
+          {issues.map((issue, idx) => (
+            <a
+              key={idx}
+              href={`${cleanHomepage}/issues/${issue.issue_number}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline text-xs whitespace-nowrap"
+            >
+              Reference {idx + 1}
+            </a>
+          ))}
+        </div>
+      </div>
+    );
+  })}
+</div>
+            
+
+          </div>
         );
       })}
+
+      {/* End of loading projects */}
     </div>
   );
 };
