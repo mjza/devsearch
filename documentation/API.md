@@ -1,10 +1,14 @@
-## Making APIs for site
+# API
+
+This document speaks about API related stuffs.
+
+## I. Making APIs for site
 
 Make the controller lives under `**app/Http/Controllers/Api**`.
 
 ---
 
-## ✅ Step 1: Create a Model (if not done yet)
+### ✅ Step 1: Create a Model (if not done yet)
 
 ```bash
 php artisan make:model NewsItem
@@ -12,7 +16,7 @@ php artisan make:model NewsItem
 
 ---
 
-## ✅ Step 2: Create an API Controller
+### ✅ Step 2: Create an API Controller
 
 ```bash
 php artisan make:controller Api/NewsItemController
@@ -20,7 +24,7 @@ php artisan make:controller Api/NewsItemController
 
 ---
 
-## ✅ Step 3: Add Route in `routes/api.php`
+### ✅ Step 3: Add Route in `routes/api.php`
 
 Add this at the bottom of `routes/api.php`:
 
@@ -35,7 +39,7 @@ This makes your API accessible at:
 
 ---
 
-## ✅ Step 4: Implement the controller method
+### ✅ Step 4: Implement the controller method
 
 Edit `app/Http/Controllers/Api/NewsItemController.php`:
 
@@ -61,7 +65,7 @@ class NewsItemController extends Controller
 
 ---
 
-## ✅ Step 5: Test the API
+### ✅ Step 5: Test the API
 
 Start the Laravel dev server:
 
@@ -93,12 +97,12 @@ Would you like to wrap the response in a consistent structure (like `{ data: [..
 
 
 
-## 404 Troubleshoting 
+## II. 404 Troubleshoting 
 Got it! A 404 from `api.php` means Laravel **isn't recognizing your route** — here’s how to troubleshoot and fix it step-by-step:
 
 ---
 
-## ✅ 1. **Double-check your route definition**
+### ✅ 1. **Double-check your route definition**
 
 Make sure `routes/api.php` includes this:
 
@@ -111,7 +115,7 @@ Route::get('/news', [NewsItemController::class, 'latest']);
 
 ---
 
-## ✅ 2. **Verify Controller Path and Method**
+### ✅ 2. **Verify Controller Path and Method**
 
 Make sure the file exists at:
 
@@ -130,7 +134,7 @@ public function latest(): \Illuminate\Http\JsonResponse
 
 ---
 
-## ✅ 3. **Restart the development server**
+### ✅ 3. **Restart the development server**
 
 If you're using `php artisan serve`, stop it (CTRL+C) and restart:
 
@@ -142,7 +146,7 @@ Sometimes route caching or server state causes temporary 404s.
 
 ---
 
-## ✅ 4. **Check your URL**
+### ✅ 4. **Check your URL**
 
 When using `api.php`, your routes are automatically prefixed with `/api`.
 
@@ -162,7 +166,7 @@ Make sure you’re not hitting `/news` directly.
 
 ---
 
-## ✅ 5. **Clear route cache (if in production or deployed)**
+### ✅ 5. **Clear route cache (if in production or deployed)**
 
 If you’re deploying or running on a live server (like uberspace), clear the route cache:
 
@@ -178,7 +182,7 @@ php artisan optimize:clear
 
 ---
 
-## ✅ 6. **Debug with route:list**
+### ✅ 6. **Debug with route:list**
 
 Check if your route is registered at all:
 
@@ -191,3 +195,6 @@ Look for this line in the output:
 ```
 GET|HEAD  api/news  ...  App\Http\Controllers\Api\NewsItemController@latest
 ```
+
+
+## III. Swagger (Documentation)
