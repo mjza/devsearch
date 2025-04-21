@@ -10,6 +10,10 @@ npm update
 composer update
 ```
 
+## Run Database
+
+Open the XAMPP Control Panel and run the MySQL and Apache in it. 
+
 ## How to run the dev server
 
 You need 2 terminals for the following steps:

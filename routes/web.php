@@ -7,6 +7,34 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
+Route::get('/about-us', function () {
+    return Inertia::render('information/about_us');
+})->name('about');
+
+Route::get('/cookie-policy', function () {
+    return Inertia::render('information/cookie_policy');
+})->name('cookie.policy');
+
+Route::get('/privacy-policy', function () {
+    return Inertia::render('information/privacy_policy');
+})->name('privacy.policy');
+
+Route::get('/terms', function () {
+    return Inertia::render('information/terms');
+})->name('terms');
+
+Route::get('/contact', function () {
+    return Inertia::render('information/contact');
+})->name('contact');
+
+Route::get('/careers', function () {
+    return Inertia::render('information/career');
+})->name('careers');
+
+Route::get('/funders', function () {
+    return Inertia::render('information/funders');
+})->name('funders');
+
 Route::get('/result', function () {
     return Inertia::render('result');
 })->name('result');
