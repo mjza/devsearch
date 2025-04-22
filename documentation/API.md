@@ -178,6 +178,18 @@ Or if you did `php artisan route:cache` before, run:
 
 ```bash
 php artisan optimize:clear
+php artisan config:clear
+php artisan cache:clear
+php artisan route:clear
+php artisan view:clear
+```
+
+You can rebuild them using:
+
+```bash
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 ```
 
 ---
