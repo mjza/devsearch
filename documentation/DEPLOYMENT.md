@@ -104,6 +104,7 @@ Laravel needs write access to some folders:
 ```bash
 chmod -R 775 storage
 chmod -R 775 bootstrap/cache
+
 ```
 
 > ✅ You can use `chmod -R 777` during setup for testing, but **revert to 775** after confirming everything works.
