@@ -10,7 +10,7 @@ export default function AboutUs() {
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
 
-            <div className="flex min-h-screen mx-35 flex-col justify-between bg-[#F9FAFB] text-[#1b1b18] dark:bg-[#0a0a0a] dark:text-white">
+            <div className="flex min-h-screen mx-0 xl:mx-35 flex-col justify-between bg-[#F9FAFB] text-[#1b1b18] dark:bg-[#0a0a0a] dark:text-white">
                 <SiteHeader />
 
                 <main className="flex-1 px-4 sm:px-8 md:px-16 py-12 max-w-5xl mx-auto">
