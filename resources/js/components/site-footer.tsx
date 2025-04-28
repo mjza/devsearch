@@ -4,7 +4,7 @@ export default function SiteFooter() {
       <div className="mx-auto">
         {/* Top Section */}
         <div className="flex flex-col gap-10 md:flex-row md:justify-between">
-          <div className="flex-1 min-w-[200px]">
+          <div className="flex-1 min-w-[150px]">
             <h4 className="text-white font-bold mb-2">DevSearch</h4>
             <p className="text-sm">Find and compare software components easily</p>
           </div>

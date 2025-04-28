@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import AppearanceToggleDropdown from '@/components/appearance-dropdown';
@@ -8,6 +9,19 @@ import { Menu, X } from 'lucide-react';
 export default function SiteHeader() {
     const { auth } = usePage<SharedData>().props;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+          if (window.innerWidth >= 1024) { // 1024px is the lg breakpoint in Tailwind
+            setIsMenuOpen(false);
+          }
+        };
+      
+        window.addEventListener('resize', handleResize);
+      
+        // Clean up listener when component unmounts
+        return () => window.removeEventListener('resize', handleResize);
+      }, []);
 
     return (
         <>
@@ -41,7 +55,7 @@ export default function SiteHeader() {
                             <div>
                                 <Link
                                     href={route('login')}
-                                    className="px-4 py-2 text-sm font-medium rounded-md border border-transparent text-[color:var(--brand-primary-light)] hover:border-[color:var(--brand-primary)] dark:text-[color:var(--brand-accent)] dark:hover:bg-[color:var(--brand-accent)/0.1] transition"
+                                    className="px-4 py-2 mr-1 text-sm font-medium rounded-md border border-transparent text-[color:var(--brand-primary-light)] hover:border-[color:var(--brand-primary)] dark:text-[color:var(--brand-accent)] dark:hover:bg-[color:var(--brand-accent)/0.1] transition"
                                 >
                                     Log in
                                 </Link>

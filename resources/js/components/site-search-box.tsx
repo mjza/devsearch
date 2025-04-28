@@ -30,10 +30,11 @@ export default function SearchBox({ title, query }: Props) {
 
       {/* Conditionally render title */}
       {title && (
-        <h1 className="mb-3 text-4xl font-extrabold text-[color:var(--brand-primary-light)] dark:text-[color:var(--brand-accent)]">
+        <h1 className="mb-3 text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-extrabold text-[color:var(--brand-primary-light)] dark:text-[color:var(--brand-accent)]">
           {title}
         </h1>
       )}
+
 
       {/* Input field + button row */}
       <div className="flex w-full gap-4">
@@ -41,6 +42,11 @@ export default function SearchBox({ title, query }: Props) {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && input.trim()) {
+              handleSearch();
+            }
+          }}
           placeholder="Search packages, components, or libraries..."
           className="flex-1 rounded-md border border-gray-300 px-4 py-3 text-[16px] font-sans text-black dark:text-white placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
         />
@@ -59,7 +65,7 @@ export default function SearchBox({ title, query }: Props) {
 
       {/* Tag buttons */}
       {!title && (
-        <div className="mt-4 flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-wrap gap-3 overflow-hidden">
           {mockTags.map((tag) => (
             <button
               key={tag}
