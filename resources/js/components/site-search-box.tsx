@@ -26,7 +26,7 @@ export default function SearchBox({ title, query }: Props) {
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-[1036px] sm:w-[90%] md:w-[80%] lg:w-[70%] h-[164px] rounded-[10px] bg-white dark:bg-gray-900 shadow-[0_5px_5px_-5px_rgba(51,51,51,1)] p-6 flex flex-col justify-between">
+    <div className="relative mx-4 md:mx-auto max-w-[1036px] sm:w-[90%] md:w-[80%] lg:w-[70%] h-[164px] rounded-[10px] bg-white dark:bg-gray-900 shadow-[0_5px_5px_-5px_rgba(51,51,51,1)] p-6 flex flex-col justify-between">
 
       {/* Conditionally render title */}
       {title && (

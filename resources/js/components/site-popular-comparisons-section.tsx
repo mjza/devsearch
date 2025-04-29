@@ -65,7 +65,7 @@ export default function SitePopularComparisonsSection() {
         Popular Comparisons
       </h2>
 
-      <div className="flex flex-row gap-4 justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:justify-center md:justify-between">
         {comparisons.filter( item => item.id < 3).map((item) => (
           <div
             key={item.id}

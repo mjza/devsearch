@@ -57,11 +57,11 @@ export default function SiteNewsSection() {
           </div>
         </div>
       ) : (
-        <div className="flex flex-row gap-4 justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:justify-center md:justify-between">
           {news.map((item) => (
             <div
               key={item.id}
-              className="flex-1 rounded-lg bg-white dark:bg-[#1b1b1b] shadow-sm p-4 flex flex-col justify-between max-w-[485px] h-[200px] min-w-0"
+              className="flex-1 rounded-lg bg-white dark:bg-[#1b1b1b] shadow-sm p-4 flex flex-col justify-between md:max-w-[485px] h-[200px] min-w-0"
             >
               <div>
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
