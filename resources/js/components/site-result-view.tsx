@@ -69,20 +69,20 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
 
   function extractCleanGitHubURL(inputUrl: string) {
     if (!inputUrl?.trim()) return null;
-  
+
     // Regular expression to match GitHub URLs
     const regex = /^https?:\/\/(?:www\.)?github\.com\/([^\/\s]+)\/([^\/\s#]+)(?:[\/#]|$)/i;
     const match = inputUrl.match(regex);
-  
+
     if (match && match[1] && match[2]) {
       const owner = match[1];
       const repo = match[2].replace(/\.git$/, ''); // Remove .git if present
       return `https://github.com/${owner}/${repo}`;
     }
-  
+
     return null; // Return null if the URL doesn't match the expected pattern
   }
-  
+
 
   return (
     <div className="flex-1 flex flex-col min-w-full items-center justify-start px-6 py-4">
@@ -105,67 +105,82 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
         </div>
       )}
       {!loading && projects.map((project, index) => {
-        const cleanRepositoryUrl =  extractCleanGitHubURL(project.repository_url);
+        const cleanRepositoryUrl = extractCleanGitHubURL(project.repository_url);
 
-        if (!cleanRepositoryUrl) 
+        if (!cleanRepositoryUrl)
           return null;
-        
+
         const attributes = Object.keys(project.quality_attributes || {}).sort((a, b) => a.localeCompare(b));
 
         return (
-          <div key={index} className="container mx-auto px-4 bg-white border rounded-lg shadow-md p-4 my-6">
+          <div key={index}
+            className="container mx-auto px-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md p-4 my-6"
+          >
             {/* Project Info */}
-            <div className="mb-4 space-y-1 text-sm">
+            <div className="mb-4 space-y-1 text-sm text-gray-800 dark:text-gray-200">
               <div><strong>Name:</strong> {project.name}</div>
               <div><strong>Description:</strong> {project.description}</div>
               <div><strong>Keywords:</strong> {formatKeywords(project.keywords)}</div>
-              <div><strong>Homepage:</strong> <a href={project.homepage} className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">{project.homepage}</a></div>
+              <div><strong>Homepage:</strong>
+                <a href={project.homepage} className="text-blue-600 dark:text-blue-400 underline" target="_blank" rel="noopener noreferrer">
+                  {project.homepage}
+                </a>
+              </div>
               <div><strong>License:</strong> {formatKeywords(project.normalized_licenses)}</div>
               <div><strong>Total Score:</strong> {project.total_score.toFixed(3)}</div>
             </div>
 
             {/* Attributes */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-  {attributes.map(attr => {
-    const score = project.quality_attributes[attr];
-    const issues = project.issue_ids?.[attr] || [];
+              {attributes.map(attr => {
+                const score = project.quality_attributes[attr];
+                const issues = project.issue_ids?.[attr] || [];
 
-    return (
-      <div
-        key={attr}
-        className="flex flex-wrap items-center justify-between bg-gray-50 border rounded p-2 gap-x-4 gap-y-2"
-      >
-        {/* Left: Attribute */}
-        <div className="text-sm font-semibold text-gray-700 whitespace-nowrap">
-          {attr}
-        </div>
+                return (
+                  <div
+                    key={attr}
+                    className="flex flex-wrap items-center justify-between bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded p-2 gap-x-4 gap-y-2"
+                  >
+                    {/* Left: Attribute */}
+                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                      {attr}
+                    </div>
 
-        {/* Center: Score */}
-        <div className="flex-1 flex justify-end min-w-[100px]">
-          <div className={`text-sm font-bold ${getColor(score)} whitespace-nowrap`}>
-            {score !== undefined ? score.toFixed(3) : '-'}
-          </div>
-        </div>
+                    {/* Center: Score */}
+                    <div className="flex-1 flex justify-end min-w-[100px]">
+                      <div className={`text-sm font-bold ${getColor(score)} whitespace-nowrap`}>
+                        {score !== undefined ? score.toFixed(3) : '-'}
+                      </div>
+                    </div>
 
-        {/* Right: Links */}
-        <div className="flex flex-wrap gap-2 justify-end min-w-fit ml-auto">
-          {issues.map((issue, idx) => (
-            <a
-              key={idx}
-              href={`${cleanRepositoryUrl}/issues/${issue.issue_number}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 underline text-xs whitespace-nowrap"
-            >
-              Reference {idx + 1}
-            </a>
-          ))}
-        </div>
-      </div>
-    );
-  })}
-</div>
-            
+                    {/* Right: Links */}
+                    <div className="flex flex-wrap gap-2 justify-end min-w-fit ml-auto">
+                      {issues.map((issue, idx) => (
+                        <div key={idx} className="relative group">
+                          <a
+                            href={`${cleanRepositoryUrl}/issues/${issue.issue_number}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 dark:text-blue-400 underline text-xs whitespace-nowrap"
+                          >
+                            Reference {idx + 1}
+                          </a>
+                          <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 pointer-events-none transition duration-300 bg-gray-100 dark:bg-gray-500 border border-gray-200 dark:border-gray-700 dark:text-white text-xs rounded px-2 py-1 z-10 min-w-[10rem] max-w-xs text-left break-words">
+                            <b>Reason:</b>&nbsp;
+                            <i>
+                              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                              nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            </i>
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-px w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-gray-200 dark:border-t-gray-700 dark:border-t-gray-700 z-[-1]"></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
 
           </div>
         );
