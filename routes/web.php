@@ -35,6 +35,10 @@ Route::get('/funders', function () {
     return Inertia::render('information/funders');
 })->name('funders');
 
+Route::get('/components', function () {
+    return Inertia::render('projects');
+})->name('projects');
+
 Route::get('/result', function () {
     return Inertia::render('result');
 })->name('result');

@@ -76,6 +76,16 @@
                             "type": "integer",
                             "default": 20
                         }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search query for project name or description",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "laravel"
+                        }
                     }
                 ],
                 "responses": {

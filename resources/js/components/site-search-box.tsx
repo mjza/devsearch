@@ -12,17 +12,20 @@ const mockTags = [
 type Props = {
   title?: string;
   query?: string;
+  destination?: string;
 };
 
-export default function SearchBox({ title, query }: Props) {
+export default function SearchBox({ title, query, destination }: Props) {
   const [input, setInput] = useState(query ?? '');
+
+  destination = destination ? destination : 'result';
 
   const handleTagClick = (tag: string) => {
     setInput(tag);
   };
 
   const handleSearch = () => {
-    router.visit(route('result') + `?query=${encodeURIComponent(input)}`);
+    router.visit(route(destination) + `?query=${encodeURIComponent(input)}`);
   };
 
   return (

@@ -33,7 +33,7 @@ export default function SiteHeader() {
 
                     {/* Desktop Navigation */}
                     <nav className="hidden lg:flex items-center space-x-10 text-gray-700">
-                        <a href="#" className="text-base font-medium hover:text-blue-500 dark:text-[#EDEDEC] dark:hover:text-blue-500">Components</a>
+                        <a href={route('projects')} className="text-base font-medium hover:text-blue-500 dark:text-[#EDEDEC] dark:hover:text-blue-500">Components</a>
                         <a href={route('about')} className="text-base font-medium hover:text-blue-500 dark:text-[#EDEDEC] dark:hover:text-blue-500">About Us</a>
                     </nav>
                 </div>
@@ -93,7 +93,7 @@ export default function SiteHeader() {
                                         </div>
                                     )}
                                 </div>
-                                <a href="/components" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-[#EDEDEC] dark:hover:bg-gray-700">Components</a>
+                                <a href={route('projects')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-[#EDEDEC] dark:hover:bg-gray-700">Components</a>
                                 <a href={route('about')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-[#EDEDEC] dark:hover:bg-gray-700">About Us</a>
                             </div>
                         )}
