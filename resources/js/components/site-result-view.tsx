@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 interface IssueReference {
-  issue_id: number;
+  reason: string;
   issue_number: number;
   score: number;
 }
@@ -51,8 +51,6 @@ const formatKeywords = (raw: string): string => {
   }
 };
 
-
-
 const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -81,6 +79,22 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
     }
 
     return null; // Return null if the URL doesn't match the expected pattern
+  }
+
+  function refineIssues(issues: IssueReference[]): IssueReference[] {
+    const sortedLimitedIssues: IssueReference[] = issues
+      .sort((a, b) => (b.reason || '').localeCompare(a.reason || ''))
+      .slice(0, 3);
+
+    while (sortedLimitedIssues.length < 3) {
+      sortedLimitedIssues.push({
+        reason: '',
+        issue_number: 0,
+        score: 0,
+      });
+    }
+
+    return sortedLimitedIssues;
   }
 
 
@@ -118,16 +132,21 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
           >
             {/* Project Info */}
             <div className="mb-4 space-y-1 text-sm text-gray-800 dark:text-gray-200">
-              <div><strong>Name:</strong> {project.name}</div>
-              <div><strong>Description:</strong> {project.description}</div>
-              <div><strong>Keywords:</strong> {formatKeywords(project.keywords)}</div>
-              <div><strong>Homepage:</strong>
-                <a href={project.homepage} className="text-blue-600 dark:text-blue-400 underline" target="_blank" rel="noopener noreferrer">
-                  {project.homepage}
+              <div><strong>Name:</strong>&nbsp;{project.name}</div>
+              <div><strong>Description:</strong>&nbsp;{project.description}</div>
+              <div><strong>Keywords:</strong>&nbsp;{formatKeywords(project.keywords)}</div>
+              <div><strong>Repository:</strong>&nbsp;
+                <a href={project.repository_url} className="text-blue-600 dark:text-blue-400 underline" target="_blank" rel="noopener noreferrer">
+                  {project.repository_url}
                 </a>
               </div>
-              <div><strong>License:</strong> {formatKeywords(project.normalized_licenses)}</div>
-              <div><strong>Total Score:</strong> {project.total_score.toFixed(3)}</div>
+              <div><strong>License:</strong>&nbsp;{formatKeywords(project.normalized_licenses)}</div>
+              <div><strong>Total Score:</strong>&nbsp;
+
+                <span className={`text-sm font-bold ${getColor(project.total_score)} whitespace-nowrap`}>
+                  {(100 * project.total_score).toFixed(2)}%
+                </span>
+              </div>
             </div>
 
             {/* Attributes */}
@@ -149,33 +168,41 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
                     {/* Center: Score */}
                     <div className="flex-1 flex justify-end min-w-[100px]">
                       <div className={`text-sm font-bold ${getColor(score)} whitespace-nowrap`}>
-                        {score !== undefined ? score.toFixed(3) : '-'}
+                        {score !== undefined ? (100 * score).toFixed(2) : '-'}%
                       </div>
                     </div>
 
                     {/* Right: Links */}
                     <div className="flex flex-wrap gap-2 justify-end min-w-fit ml-auto">
-                      {issues.map((issue, idx) => (
-                        <div key={idx} className="relative group">
-                          <a
-                            href={`${cleanRepositoryUrl}/issues/${issue.issue_number}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 dark:text-blue-400 underline text-xs whitespace-nowrap"
-                          >
-                            Reference {idx + 1}
-                          </a>
-                          <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 pointer-events-none transition duration-300 bg-gray-100 dark:bg-gray-500 border border-gray-200 dark:border-gray-700 dark:text-white text-xs rounded px-2 py-1 z-10 min-w-[10rem] max-w-xs text-left break-words">
-                            <b>Reason:</b>&nbsp;
-                            <i>
-                              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                              nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            </i>
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-px w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-gray-200 dark:border-t-gray-700 dark:border-t-gray-700 z-[-1]"></div>
+                      {
+                        refineIssues(issues).map((issue, idx) => (
+                          <div key={idx} className="relative group">
+                            {issue.reason ? (
+                              <>
+                                <a
+                                  href={`${cleanRepositoryUrl}/issues/${issue.issue_number}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 dark:text-blue-400 underline text-xs whitespace-nowrap"
+                                >
+                                  Reference {idx + 1}
+                                </a>
+                                <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 pointer-events-none transition duration-300 bg-gray-100 dark:bg-gray-500 border border-gray-200 dark:border-gray-700 dark:text-white text-xs rounded px-2 py-1 z-10 min-w-[10rem] max-w-xs text-left break-words">
+                                  <b>Reason:</b>&nbsp;
+                                  <i>
+                                    {issue.reason}&nbsp;({(100 * issue.score).toFixed(0)}%)
+                                  </i>
+                                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-px w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-gray-200 dark:border-t-gray-700 dark:border-t-gray-700 z-[-1]"></div>
+                                </div>
+                              </>
+                            ) : (
+                              <span className="text-gray-400 text-xs whitespace-nowrap cursor-not-allowed">
+                                Reference {idx + 1}
+                              </span>
+                            )}
+
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   </div>
                 );
