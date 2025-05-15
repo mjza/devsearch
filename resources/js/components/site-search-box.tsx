@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { router } from '@inertiajs/react';
 
 const mockTags = [
@@ -16,9 +16,18 @@ type Props = {
 };
 
 export default function SearchBox({ title, query, destination }: Props) {
-  const [input, setInput] = useState(query ?? '');
-
   destination = destination ? destination : 'result';
+
+  const [input, setInput] = useState(query ?? '');
+  const prevInputRef = useRef(input);
+
+  useEffect(() => {
+    if (prevInputRef.current.length === 1 && input.length === 0 && destination !== 'result') {
+      router.visit(route(destination));
+    }
+
+    prevInputRef.current = input;
+  }, [input]);
 
   const handleTagClick = (tag: string) => {
     setInput(tag);

@@ -66,7 +66,7 @@ export default function Results() {
                             <button
                                 onClick={handleSearch}
                                 disabled={selected.size < 2}
-                                className={`px-4 py-2 rounded bg-lime-600 dark:bg-gray-400 text-white disabled:opacity-50 
+                                className={`px-4 py-2 text-sm font-medium rounded-md border border-[color:var(--brand-primary-light)] bg-[color:var(--brand-primary-light)] text-white hover:bg-[color:var(--brand-accent)] dark:border-[color:var(--brand-accent)] dark:bg-[color:var(--brand-accent)] dark:hover:brightness-110 transition disabled:opacity-50 
                                     ${selected.size > 1 ? 'cursor-pointer' : 'cursor-not-allowed'}`}
                             >
                                 Compare
@@ -75,7 +75,7 @@ export default function Results() {
                             <button
                                 onClick={handleClear}
                                 disabled={selected.size < 2}
-                                className={`px-4 py-2 rounded bg-rose-500 dark:bg-slate-600 text-white disabled:opacity-50
+                                className={`px-4 py-2 text-sm font-medium rounded-md border border-[color:var(--brand-primary-light)] bg-[color:var(--brand-secondary)] text-white hover:bg-[color:var(--brand-highlight)] dark:border-[color:var(--brand-accent)] dark:bg-[color:var(--brand-highlight)] dark:hover:brightness-110 transition disabled:opacity-50
                                     ${selected.size > 1 ? 'cursor-pointer' : 'cursor-not-allowed'}`}
                             >
                                 Deselect All
