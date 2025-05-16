@@ -105,17 +105,18 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query, page, se
             }}
           >
             <div className="w-[280px] h-[340px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all p-4 flex flex-col justify-between cursor-pointer">
-              <div>
+              <div className="flex-grow overflow-hidden min-h-0 flex flex-col">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-2 mb-1">
                   {project.name}
                 </h2>
-                <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 mb-2">
+                <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-6 mb-2">
                   <strong className="font-large">Description:&nbsp;</strong>{project.description}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                  <strong className="font-large">Keywords:&nbsp;</strong>{formatKeywords(project.keywords)}
+                <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-6 mb-1">
+                  <strong className="font-large">Keywords:&nbsp;</strong>
+                  {formatKeywords(project.keywords)}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1 mb-1">
                   <strong className="font-large">License:&nbsp;</strong>{formatKeywords(project.normalized_licenses)}
                 </p>
               </div>
