@@ -85,7 +85,11 @@ class ProjectController extends Controller
         if (!empty($query)) {
             $projectsQuery->where(function ($q) use ($query) {
                 $q->whereRaw('LOWER(name) LIKE ?', ["%$query%"])
-                ->orWhereRaw('LOWER(description) LIKE ?', ["%$query%"]);
+                ->orWhereRaw('LOWER(description) LIKE ?', ["%$query%"])
+                ->orWhereRaw('LOWER(keywords) LIKE ?', ["%$query%"])
+                ->orWhereRaw('LOWER(repository_url) LIKE ?', ["%$query%"])
+                ->orWhereRaw('LOWER(normalized_licenses) LIKE ?', ["%$query%"])
+                ->orWhereRaw('LOWER(language) LIKE ?', ["%$query%"]);
             });
         }
 

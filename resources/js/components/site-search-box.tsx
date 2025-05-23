@@ -3,10 +3,11 @@ import { useState, useRef, useEffect } from 'react';
 import { router } from '@inertiajs/react';
 
 const mockTags = [
-  'Front-end Frameworks',
-  'Databases',
-  'Authentication',
-  'Payment Systems',
+  'Blockchain',
+  'Graphql',
+  'ORM',
+  'svg',
+  'postgres or mysql'
 ];
 
 type Props = {

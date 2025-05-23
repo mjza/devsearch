@@ -85,6 +85,9 @@ class SearchController extends Controller
         } elseif (str_contains($query, ' and ')) {
             $searchMode = 'and';
             $terms = explode(' and ', $query);
+        } elseif (str_contains($query, ' vs. ')) {
+            $searchMode = 'vs';
+            $terms = explode(' vs. ', $query);
         } elseif (str_contains($query, ' vs ')) {
             $searchMode = 'vs';
             $terms = explode(' vs ', $query);
@@ -96,19 +99,33 @@ class SearchController extends Controller
             if ($searchMode === 'or' || $searchMode === 'vs') {
                 foreach ($terms as $term) {
                     $q->orWhere('name', 'LIKE', "%{$term}%")
-                        ->orWhere('description', 'LIKE', "%{$term}%");
+                      ->orWhere('description', 'LIKE', "%{$term}%")
+                      ->orWhere('keywords', 'LIKE', "%{$term}%")
+                      ->orWhere('repository_url', 'LIKE', "%{$term}%")
+                      ->orWhere('normalized_licenses', 'LIKE', "%{$term}%")
+                      ->orWhere('language', 'LIKE', "%{$term}%")                    
+                      ;  
                 }
             } elseif ($searchMode === 'and') {
                 foreach ($terms as $term) {
                     $q->where(function ($subQ) use ($term) {
                         $subQ->where('name', 'LIKE', "%{$term}%")
-                            ->orWhere('description', 'LIKE', "%{$term}%");
+                             ->orWhere('description', 'LIKE', "%{$term}%")
+                             ->orWhere('keywords', 'LIKE', "%{$term}%")
+                             ->orWhere('repository_url', 'LIKE', "%{$term}%")
+                             ->orWhere('normalized_licenses', 'LIKE', "%{$term}%")
+                             ->orWhere('language', 'LIKE', "%{$term}%");
                     });
                 }
             } else {
                 $term = $terms[0];
-                $q->where('name', 'LIKE', "%{$term}%")
-                    ->orWhere('description', 'LIKE', "%{$term}%");
+                $q->orWhere('name', 'LIKE', "%{$term}%")
+                  ->orWhere('description', 'LIKE', "%{$term}%")
+                  ->orWhere('keywords', 'LIKE', "%{$term}%")
+                  ->orWhere('repository_url', 'LIKE', "%{$term}%")
+                  ->orWhere('normalized_licenses', 'LIKE', "%{$term}%")
+                  ->orWhere('language', 'LIKE', "%{$term}%")                    
+                  ;
             }
         })
         ->whereIn('id', ProjectTopAttribute::distinct()->pluck('project_id'))

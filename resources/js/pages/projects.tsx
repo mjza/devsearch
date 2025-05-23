@@ -25,7 +25,7 @@ export default function Results() {
 
     // the generated string ↓
     const searchString =
-        [...selected].join(" or ");
+        [...selected].join(" vs. ");
 
     // --- handlers for the two buttons ---------------------------------
     const handleSearch = () => {
