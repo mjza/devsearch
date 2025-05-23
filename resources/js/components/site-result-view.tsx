@@ -3,8 +3,15 @@
  * Project info in first row, quality attribute names in second row, and scores in third row.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
+
+type SortDirection = "asc" | "desc" | null;
+
+interface SortState {
+  attribute: string | null;
+  direction: SortDirection;
+}
 
 interface IssueReference {
   reason: string;
@@ -55,6 +62,40 @@ const formatKeywords = (raw: string): string => {
 const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [sortState, setSortState] = useState<SortState>({
+    attribute: null,
+    direction: null,
+  });
+
+  const handleSortClick = (attribute: string) => {
+    setSortState((prev) => {
+      if (prev.attribute !== attribute) {
+        return { attribute, direction: "desc" };
+      } else if (prev.direction === "desc") {
+        return { attribute, direction: "asc" };
+      } else if (prev.direction === "asc") {
+        return { attribute: null, direction: null };
+      } else {
+        return { attribute, direction: "desc" };
+      }
+    });
+  };
+
+  const sortedProjects = useMemo(() => {
+    const { attribute, direction } = sortState;
+
+    if (!attribute || !direction) return projects;
+
+    return [...projects].sort((a, b) => {
+      const aScore = a.quality_attributes?.[attribute];
+      const bScore = b.quality_attributes?.[attribute];
+
+      const aVal = typeof aScore === "number" ? aScore : -Infinity;
+      const bVal = typeof bScore === "number" ? bScore : -Infinity;
+
+      return direction === "desc" ? bVal - aVal : aVal - bVal;
+    });
+  }, [projects, sortState]);
 
   useEffect(() => {
     if (!query)
@@ -131,6 +172,79 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
           </div>
         </div>
       )}
+
+      {!loading && projects.length > 0 && (
+        <div className="my-6">
+          <div className="w-full justify-start">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2 px-1">
+              Component Attribute Overview
+            </h2>
+          </div>
+          <div className="w-full overflow-x-auto">
+            <table className="w-full table-fixed text-sm border-collapse">
+              <thead className="bg-gray-200 dark:bg-gray-800">
+                <tr className="border-t border-b border-gray-300 dark:border-gray-700">
+                  <th className="w-[16.66%] px-3 py-2 text-left text-gray-800 dark:text-gray-200">
+                    Projects
+                  </th>
+                  {Object.keys(projects[0].quality_attributes || {}).sort().map(attr => (
+                    <th
+                      key={attr}
+                      className="w-[8.33%] px-3 py-2 text-center cursor-pointer text-gray-800 dark:text-gray-200 break-words overflow-hidden"
+                      onClick={() => handleSortClick(attr)}
+                    >
+                      {sortState.attribute === attr && (
+                        sortState.direction === "asc" ? <><span>▲</span><br /></> : null
+                      )}
+                      <span className="text-blue-600 dark:text-blue-400 underline hover:opacity-80">{attr}</span>
+                      {sortState.attribute === attr && (
+                        sortState.direction === "desc" ? <><br /><span>▼</span></> : null
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {sortedProjects.map((project, index) => {
+                  const attributes = Object.keys(project.quality_attributes || {}).sort();
+                  return (
+                    <tr
+                      key={index}
+                      className="border-t border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+                      onClick={() => {
+                        const element = document.getElementById(`project-${index}`);
+                        element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }}
+                    >
+                      <td className="w-[16.66%] px-3 py-2 text-blue-600 dark:text-blue-400 underline break-words border-r border-gray-200 dark:border-gray-700">
+                        {project.name}
+                      </td>
+                      {attributes.map(attr => {
+                        const score = project.quality_attributes[attr];
+                        return (
+                          <td
+                            key={attr}
+                            className={`w-[8.33%] px-3 py-2 text-sm break-words text-center ${getColor(score)}`}
+                          >
+                            {score !== undefined ? formatScore(score) : '–'}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div className="w-full">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-0 px-1 float-right">
+              Click on any column name to sort by that quality attribute.
+            </p>
+          </div>
+        </div>
+      )}
+
+
       {!loading && projects.map((project, index) => {
         const cleanRepositoryUrl = extractCleanGitHubURL(project.repository_url);
 
@@ -141,6 +255,7 @@ const SearchResultsTable: React.FC<SearchResultsTableProps> = ({ query }) => {
 
         return (
           <div key={index}
+            id={`project-${index}`}
             className="container mx-auto px-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md p-4 my-6"
           >
             {/* Project Info */}
